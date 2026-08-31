@@ -1,0 +1,111 @@
+
+/* ── Inventory cards + photo gallery (swipeable) ── */
+.inv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; align-items: start; }
+.inv-card { display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #D5E1EC; transition: border-color .18s; }
+.inv-card:hover { border-color: #0B5FB4; }
+.inv-body { padding: 24px 26px 26px; display: flex; flex-direction: column; flex: 1; }
+.inv-cta { display: inline-block; margin-top: 20px; padding: 11px 20px; background: #0B5FB4; color: #FFFFFF !important; font-size: 14px; font-weight: 500; text-align: center; transition: background .18s; }
+.inv-cta:hover { background: #0A54A0; }
+.inv-soon { border-style: dashed; background: transparent; }
+
+.gal { position: relative; height: 260px; background: #E7EEF5; overflow: hidden; }
+.gal-track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+.gal-track::-webkit-scrollbar { display: none; }
+.gal-slide { flex: 0 0 100%; height: 100%; scroll-snap-align: center; position: relative; }
+.gal-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gal-slide--missing { display: flex; align-items: center; justify-content: center; background-image: repeating-linear-gradient(135deg, rgba(16,42,69,.07) 0 2px, transparent 2px 12px); }
+.gal-slide--missing::after { content: 'PHOTO PENDING'; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #98A1AB; letter-spacing: .1em; }
+
+.gal-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; padding: 0; border: none; border-radius: 50%; background: rgba(255,255,255,.92); color: #102A45; font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .18s; box-shadow: 0 1px 6px rgba(16,42,69,.24); }
+.gal:hover .gal-btn, .gal-btn:focus-visible { opacity: 1; }
+.gal-btn[disabled] { opacity: 0 !important; pointer-events: none; }
+.gal-prev { left: 10px; }
+.gal-next { right: 10px; }
+
+.gal-count { position: absolute; top: 10px; right: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #FFFFFF; background: rgba(16,42,69,.62); padding: 3px 8px; letter-spacing: .06em; }
+.gal-dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.gal-dot { width: 6px; height: 6px; padding: 0; border: none; border-radius: 50%; background: rgba(255,255,255,.6); cursor: pointer; box-shadow: 0 0 0 1px rgba(16,42,69,.2); transition: width .18s, border-radius .18s, background .18s; }
+.gal-dot[aria-current="true"] { background: #FFFFFF; width: 16px; border-radius: 3px; }
+
+
+/* ════════════════════════════════════════════════════════════
+   Responsive
+   斷點：1080px 平板橫向 / 820px 直向（多欄改單欄）/ 560px 手機
+   頁面版面是 inline style 寫死的，所以這裡的覆寫需要 !important。
+   ════════════════════════════════════════════════════════════ */
+
+img { max-width: 100%; }
+
+/* ── 平板橫向：縮邊距、縮 logo ── */
+@media (max-width: 1080px) {
+  .sec, .nav-bar { padding-left: 44px !important; padding-right: 44px !important; }
+  .hero-copy { padding: 66px 36px 64px 44px !important; }
+  .split-a   { padding: 66px 36px 66px 44px !important; }
+  .split-b   { padding: 66px 44px 66px 36px !important; }
+  .nav-logo  { height: 70px !important; }
+  .nav-links { gap: 20px !important; }
+  .inv-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr !important; gap: 40px !important; }
+  h1 { font-size: 46px !important; }
+}
+
+/* ── 平板直向：所有多欄版面改單欄 ── */
+@media (max-width: 820px) {
+  .hero      { grid-template-columns: 1fr !important; }
+  .hero-art  { min-height: 300px !important; }
+  .split     { grid-template-columns: 1fr !important; }
+  .split-a   { border-right: none !important; border-bottom: 1px solid #EDEFF2 !important; }
+  .rgrid     { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .bk-layout { grid-template-columns: 1fr !important; gap: 44px !important; }
+  .cities    { grid-template-columns: repeat(2, 1fr) !important; }
+  .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 36px !important; }
+  .sec-head  { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+  h1 { font-size: 40px !important; }
+  h2 { font-size: 29px !important; }
+  blockquote { font-size: 25px !important; line-height: 1.4 !important; }
+}
+
+/* ── 手機 ── */
+@media (max-width: 560px) {
+  .sec { padding-left: 20px !important; padding-right: 20px !important;
+         padding-top: 54px !important; padding-bottom: 54px !important; }
+  .hero-copy { padding: 44px 20px 48px !important; }
+  .split-a   { padding: 48px 20px !important; }
+  .split-b   { padding: 48px 20px !important; }
+  .hero-art  { min-height: 210px !important; }
+
+  /* 導覽列改兩行：logo 一行，電話與預約按鈕一行，避免擠爆 */
+  .nav-bar   { flex-wrap: wrap; gap: 10px; padding: 12px 20px !important; }
+  .nav-logo  { height: 46px !important; }
+  .nav-links { width: 100%; justify-content: space-between !important; gap: 10px !important; }
+  .nav-links > a[href^="#"] { display: none !important; }  /* 區塊連結收起，底部選單仍有 */
+  .nav-links > div { display: none !important; }           /* EN / 中 切換 */
+
+  .hero-cta  { flex-direction: column; align-items: stretch !important; gap: 12px !important; }
+  .hero-cta a { text-align: center; }
+  .hero-stats { flex-wrap: wrap; gap: 18px !important; }
+  .hero-stats > div[style*="width: 1px"] { display: none; }
+
+  .inv-grid  { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .gal       { height: 230px !important; }
+  .cities    { grid-template-columns: 1fr 1fr !important; }
+  .footer-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+  .foot-bottom { flex-direction: column; align-items: flex-start !important; gap: 12px; }
+
+  .bk-pair   { grid-template-columns: 1fr !important; }
+
+  h1 { font-size: 33px !important; line-height: 1.15 !important; }
+  h2 { font-size: 25px !important; }
+  blockquote { font-size: 21px !important; line-height: 1.42 !important; }
+}
+
+/* 觸控裝置沒有 hover，輪播箭頭直接顯示 */
+@media (hover: none) {
+  .gal-btn { opacity: 1; }
+}
+
+/* 設計稿匯出時最外層寫死 width: 1440px，改成上限 1440、以下自適應 */
+.page { width: 100% !important; max-width: 1440px !important; }
+
+/* grid 子項預設 min-width:auto，內容撐不下時會把版面推寬 */
+.split > *, .rgrid > *, .bk-layout > *, .footer-grid > *, .inv-grid > * { min-width: 0; }

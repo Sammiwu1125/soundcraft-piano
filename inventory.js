@@ -3,12 +3,15 @@
   'use strict';
 
   // 照片檔案還沒放進資料夾時，顯示斜線底的 PHOTO PENDING 佔位。
+  function markMissing(img) {
+    var slide = img.parentElement;
+    if (slide) slide.classList.add('gal-slide--missing');
+    img.remove();
+  }
   document.querySelectorAll('.gal-slide img').forEach(function (img) {
-    img.addEventListener('error', function () {
-      var slide = img.parentElement;
-      if (slide) slide.classList.add('gal-slide--missing');
-      img.remove();
-    });
+    img.addEventListener('error', function () { markMissing(img); });
+    // 腳本執行前就載入失敗的圖，error 事件已經錯過，這裡補判一次
+    if (img.complete && img.naturalWidth === 0) markMissing(img);
   });
 
   document.querySelectorAll('[data-gal]').forEach(function (gal) {
