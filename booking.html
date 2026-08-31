@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #FFFFFF; font-family: Inter, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #0B5FB4; text-decoration: none; }
+  a:hover { color: #08477F; }
+  input, select, textarea { font-family: inherit; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #0B5FB4; }
+  select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%235B6672' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>"); background-repeat: no-repeat; background-position: right 16px center; }
+.hv1:hover { color: #0B5FB4 !important; }
+.hv2:hover { color: #0B5FB4 !important; }
+.hv3:hover { color: #0B5FB4 !important; }
+.hv4:hover { color: #0B5FB4 !important; }
+.hv5:hover { color: #0B5FB4 !important; }
+.hv6:hover { background: #0A54A0 !important; }
+.hv7:hover { border-color: #0B5FB4 !important; }
+.hv8:hover { background: #0A54A0 !important; }
+.hv9:hover { color: #0B5FB4 !important; }
+.hv10:hover { color: rgba(255,255,255,.7) !important; }
+.hv11:hover { color: rgba(255,255,255,.7) !important; }
+.hv12:hover { color: #FFFFFF !important; }
+.hv13:hover { color: #FFFFFF !important; }
+.hv14:hover { color: #FFFFFF !important; }
+.hv15:hover { color: #FFFFFF !important; }
+.hv16:hover { color: rgba(255,255,255,.7) !important; }
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Service — Soundcraft Piano Service</title>
+</head>
+<body>
+
+<div style="width: 1440px; margin: 0 auto; background: #FFFFFF; color: #111418">
+
+  <div style="position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.94); backdrop-filter: blur(10px); border-bottom: 1px solid #E6EBF0">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px 72px">
+      <a href="index.html" style="display: block; line-height: 0">
+        <img src="assets/logo-h-tight.png" alt="Soundcraft Piano Service" style="height: 96px; width: auto; display: block">
+      </a>
+      <div style="display: flex; align-items: center; gap: 34px">
+        <a href="index.html" class="hv1" style="font-size: 14px; font-weight: 500; color: #3C4550">Services</a>
+        <a href="index.html" class="hv2" style="font-size: 14px; font-weight: 500; color: #3C4550">Pianos</a>
+        <a href="index.html" class="hv3" style="font-size: 14px; font-weight: 500; color: #3C4550">Rentals</a>
+        <a href="index.html" class="hv4" style="font-size: 14px; font-weight: 500; color: #3C4550">About</a>
+        <div style="display: flex; align-items: center; gap: 7px; padding-left: 4px; border-left: 1px solid #E3E6EA">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #111418; letter-spacing: .06em">EN</span>
+          <span style="font-size: 12px; color: #C3C9D0">/</span>
+          <span style="font-family: 'Noto Sans TC', sans-serif; font-size: 12px; color: #8A929C">中</span>
+        </div>
+        <a href="tel:+12366225636" class="hv5" style="font-size: 14px; font-weight: 500; color: #3C4550">(236) 622-5636</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #E7EEF5; border-bottom: 1px solid #D5E1EC; padding: 62px 72px 58px">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #0B5FB4; letter-spacing: .16em; margin-bottom: 20px">BOOK A SERVICE</div>
+    <h1 style="margin: 0; font-family: Poppins, sans-serif; font-weight: 600; font-size: 46px; line-height: 1.12; letter-spacing: -.024em; text-wrap: pretty">Tell us about your piano.</h1>
+    <p style="margin: 20px 0 0; font-size: 17px; line-height: 1.62; color: #45525F; max-width: 620px; text-wrap: pretty">Send us a few details and we will reply with a time and a price. No payment is taken and nothing is confirmed until you agree to both.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 380px; gap: 72px; padding: 72px 72px 96px; align-items: start">
+
+    <div id="success-view" style="display: none; border: 1px solid #D5E1EC; background: #F6FAFD; padding: 48px 44px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #0B5FB4; letter-spacing: .16em; margin-bottom: 22px">REQUEST READY TO SEND</div>
+        <h2 style="margin: 0 0 16px; font-family: Poppins, sans-serif; font-size: 30px; font-weight: 600; letter-spacing: -.02em">Your email client is opening.</h2>
+        <p style="margin: 0 0 28px; font-size: 16px; line-height: 1.66; color: #45525F; max-width: 520px">Your request has been placed in a new email to <strong>rrrick1324@gmail.com</strong>. Press send in your mail app and we will reply within one business day, Monday to Saturday.</p>
+        <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.66; color: #45525F; max-width: 520px">If nothing opened, call or text us at <a href="tel:+12366225636" style="font-weight: 500">(236) 622-5636</a> and we will take the details over the phone.</p>
+        <div style="display: flex; align-items: center; gap: 14px">
+          <a href="index.html" class="hv6" style="font-family: Poppins, sans-serif; font-size: 15px; font-weight: 600; color: #FFFFFF; background: #0B5FB4; padding: 15px 28px; border-radius: 6px">Back to home</a>
+          <button type="button" id="reset-btn" class="hv7" style="font-family: Poppins, sans-serif; font-size: 15px; font-weight: 500; color: #0B5FB4; background: transparent; border: 1px solid #C9D6E4; padding: 14px 26px; border-radius: 6px; cursor: pointer">Send another request</button>
+        </div>
+      </div>
+
+    <div id="form-view">
+      <form id="booking-form" style="display: flex; flex-direction: column; gap: 38px">
+
+        <div style="display: flex; flex-direction: column; gap: 24px">
+          <div style="display: flex; align-items: baseline; gap: 14px; padding-bottom: 6px; border-bottom: 1px solid #111418">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em">01</div>
+            <div style="font-family: Poppins, sans-serif; font-size: 17px; font-weight: 500">How to reach you</div>
+          </div>
+
+          <div>
+            <label for="bk-name" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Name <span style="color: #0B5FB4">*</span></label>
+            <input id="bk-name" name="name" type="text" required="required" placeholder="First and last name" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+            <div>
+              <label for="bk-phone" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Phone</label>
+              <input id="bk-phone" name="phone" type="tel" placeholder="(604) 000-0000" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+            </div>
+            <div>
+              <label for="bk-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Email</label>
+              <input id="bk-email" name="email" type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+            </div>
+          </div>
+          <div id="contact-hint" style="font-size: 13px; color: #6B7683; margin-top: -12px">Either one is enough — whichever you prefer we use.</div>
+          <div id="contact-error" style="display: none; align-items: center; gap: 10px; margin-top: -12px; padding: 12px 14px; background: #FDF3EC; border-left: 3px solid #F2740B">
+            <span style="font-size: 13px; font-weight: 500; color: #8A4407">Please add a phone number or an email address so we can reply.</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px">
+          <div style="display: flex; align-items: baseline; gap: 14px; padding-bottom: 6px; border-bottom: 1px solid #111418">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em">02</div>
+            <div style="font-family: Poppins, sans-serif; font-size: 17px; font-weight: 500">What you need, and where</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+            <div>
+              <label for="bk-service" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Service <span style="color: #0B5FB4">*</span></label>
+              <select id="bk-service" name="service" required="required" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 40px 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background-color: #FFFFFF">
+                <option value="Piano Tuning">Piano Tuning</option>
+                <option value="Piano Repair">Piano Repair</option>
+                <option value="Cleaning &amp; Maintenance">Cleaning &amp; Maintenance</option>
+                <option value="Piano Moving">Piano Moving</option>
+                <option value="Rental enquiry">Rental enquiry</option>
+                <option value="Buying a piano">Buying a piano</option>
+                <option value="Selling my piano">Selling my piano</option>
+              </select>
+            </div>
+            <div>
+              <label for="bk-city" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">City <span style="color: #0B5FB4">*</span></label>
+              <select id="bk-city" name="city" required="required" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 40px 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background-color: #FFFFFF">
+                <option value="">Select a city</option>
+                <option value="Vancouver">Vancouver</option>
+                <option value="Burnaby">Burnaby</option>
+                <option value="Richmond">Richmond</option>
+                <option value="Surrey">Surrey</option>
+                <option value="Coquitlam">Coquitlam</option>
+                <option value="Port Coquitlam">Port Coquitlam</option>
+                <option value="New Westminster">New Westminster</option>
+                <option value="North Vancouver">North Vancouver</option>
+                <option value="West Vancouver">West Vancouver</option>
+                <option value="Delta">Delta</option>
+                <option value="Langley">Langley</option>
+                <option value="White Rock">White Rock</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding-bottom: 6px; border-bottom: 1px solid #111418">
+            <div style="display: flex; align-items: baseline; gap: 14px">
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em">03</div>
+              <div style="font-family: Poppins, sans-serif; font-size: 17px; font-weight: 500">About the piano</div>
+            </div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8A929C; letter-spacing: .1em">OPTIONAL</div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+            <div>
+              <label for="bk-type" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Upright or grand</label>
+              <select id="bk-type" name="pianoType" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 40px 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background-color: #FFFFFF">
+                <option value="">Not sure</option>
+                <option value="Upright">Upright</option>
+                <option value="Grand">Grand</option>
+                <option value="Baby grand">Baby grand</option>
+                <option value="Digital piano">Digital piano</option>
+              </select>
+            </div>
+            <div>
+              <label for="bk-last" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Last tuned</label>
+              <select id="bk-last" name="lastTuned" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 40px 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background-color: #FFFFFF">
+                <option value="">Not sure</option>
+                <option value="Within the last year">Within the last year</option>
+                <option value="1 – 3 years ago">1 – 3 years ago</option>
+                <option value="More than 3 years ago">More than 3 years ago</option>
+                <option value="Never, or unknown">Never, or unknown</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="bk-when" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Preferred time for the visit</label>
+            <select id="bk-when" name="preferred" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 40px 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background-color: #FFFFFF">
+              <option value="No preference">No preference</option>
+              <option value="Weekday mornings">Weekday mornings</option>
+              <option value="Weekday afternoons">Weekday afternoons</option>
+              <option value="Weekday late afternoons">Weekday late afternoons</option>
+              <option value="Saturdays">Saturdays</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="bk-notes" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Anything else we should know</label>
+            <textarea id="bk-notes" name="notes" rows="4" placeholder="Make and model if you know it, sticking keys, buzzing notes, recent moves, stairs at the entrance." style="width: 100%; box-sizing: border-box; font-size: 16px; line-height: 1.6; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF; resize: vertical"></textarea>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px; padding-top: 6px">
+          <button type="submit" class="hv8" style="font-family: Poppins, sans-serif; font-size: 16px; font-weight: 600; color: #FFFFFF; background: #0B5FB4; padding: 17px 34px; border: none; border-radius: 6px; cursor: pointer">Send request</button>
+          <div style="font-size: 14px; color: #6B7683">We reply within one business day.</div>
+        </div>
+      </form>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1px; background: #D5E1EC; border: 1px solid #D5E1EC">
+      <div style="background: #FFFFFF; padding: 26px 26px 24px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em; margin-bottom: 18px">PRICING</div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid #EDF1F5">
+          <span style="font-size: 15px; font-weight: 500">Piano Tuning</span>
+          <span style="font-size: 15px; color: #45525F; white-space: nowrap">$120 – $150</span>
+        </div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid #EDF1F5">
+          <span style="font-size: 15px; font-weight: 500">Piano Rental</span>
+          <span style="font-size: 15px; color: #45525F; white-space: nowrap">$60 – $90 / mo</span>
+        </div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-top: 12px">
+          <span style="font-size: 15px; font-weight: 500">Repair &amp; moving</span>
+          <span style="font-size: 15px; color: #45525F; white-space: nowrap">Quote on request</span>
+        </div>
+      </div>
+
+      <div style="background: #FFFFFF; padding: 26px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em; margin-bottom: 18px">PREFER TO TALK</div>
+        <a href="tel:+12366225636" class="hv9" style="display: block; font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500; color: #111418; margin-bottom: 8px">(236) 622-5636</a>
+        <a href="mailto:rrrick1324@gmail.com" style="display: block; font-size: 15px; margin-bottom: 16px">rrrick1324@gmail.com</a>
+        <div style="font-size: 14px; line-height: 1.7; color: #45525F">Monday – Saturday<br>9:00 – 18:00</div>
+      </div>
+
+      <div style="background: #FFFFFF; padding: 26px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em; margin-bottom: 16px">WE COME TO YOU</div>
+        <div style="font-size: 14px; line-height: 1.85; color: #45525F">Vancouver · Burnaby · Richmond · Surrey · Coquitlam · Port Coquitlam · New Westminster · North Vancouver · West Vancouver · Delta · Langley · White Rock</div>
+      </div>
+
+      <div style="background: #FFFFFF; padding: 26px">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em; margin-bottom: 16px">WHAT HAPPENS NEXT</div>
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <div style="display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: baseline">
+            <span style="font-family: Poppins, sans-serif; font-size: 15px; font-weight: 500; color: #B6C6D6">1</span>
+            <span style="font-size: 14px; line-height: 1.6; color: #45525F">We read your request and check the schedule.</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: baseline">
+            <span style="font-family: Poppins, sans-serif; font-size: 15px; font-weight: 500; color: #B6C6D6">2</span>
+            <span style="font-size: 14px; line-height: 1.6; color: #45525F">You get a time window and a price to approve.</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: baseline">
+            <span style="font-family: Poppins, sans-serif; font-size: 15px; font-weight: 500; color: #B6C6D6">3</span>
+            <span style="font-size: 14px; line-height: 1.6; color: #45525F">We confirm the address and come to you.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background: #0A1B2B; color: #FFFFFF; padding: 72px 72px 56px">
+    <div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 56px; padding-bottom: 56px; border-bottom: 1px solid rgba(255,255,255,.12)">
+      <div>
+        <img src="assets/logo-h-light-tight.png" alt="Soundcraft Piano Service" style="height: 42px; width: auto; display: block; margin-bottom: 26px">
+        <div style="font-size: 15px; line-height: 1.7; color: rgba(255,255,255,.66)">Piano tuning, repair, sales, and rental across Greater Vancouver.</div>
+      </div>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .14em; margin-bottom: 20px">CONTACT</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px">
+          <a href="tel:+12366225636" class="hv10" style="color: #FFFFFF">(236) 622-5636</a>
+          <a href="mailto:rrrick1324@gmail.com" class="hv11" style="color: #FFFFFF">rrrick1324@gmail.com</a>
+          <div style="color: rgba(255,255,255,.66); line-height: 1.6; margin-top: 6px">Monday – Saturday<br>9:00 – 18:00</div>
+          <div style="color: rgba(255,255,255,.66); margin-top: 6px">Facebook: Soundcraft Piano Service</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .14em; margin-bottom: 20px">PAGES</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px">
+          <a href="index.html" class="hv12" style="color: rgba(255,255,255,.82)">Services</a>
+          <a href="index.html" class="hv13" style="color: rgba(255,255,255,.82)">Pianos</a>
+          <a href="index.html" class="hv14" style="color: rgba(255,255,255,.82)">Rentals</a>
+          <a href="index.html" class="hv15" style="color: rgba(255,255,255,.82)">About</a>
+          <a href="Soundcraft Booking.dc.html" class="hv16" style="color: #FFFFFF">Book a Service</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .14em; margin-bottom: 20px">SERVICE AREA</div>
+        <div style="font-size: 14px; line-height: 1.9; color: rgba(255,255,255,.66)">Vancouver · Burnaby · Richmond · Surrey · Coquitlam · Port Coquitlam · New Westminster · North Vancouver · West Vancouver · Delta · Langley · White Rock</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 28px">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(255,255,255,.4); letter-spacing: .08em">© 2026 SOUNDCRAFT PIANO SERVICE</div>
+      <div style="display: flex; align-items: center; gap: 7px">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #FFFFFF; letter-spacing: .06em">EN</span>
+        <span style="font-size: 12px; color: rgba(255,255,255,.3)">/</span>
+        <span style="font-family: 'Noto Sans TC', sans-serif; font-size: 12px; color: rgba(255,255,255,.5)">中</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="booking.js"></script>
+</body>
+</html>

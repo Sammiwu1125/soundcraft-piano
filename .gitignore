@@ -1,0 +1,18 @@
+# 設計稿匯出的巨大單檔備份（各約 7 MB，網站沒有引用）
+Soundcraft Piano Service - Home.html
+Soundcraft Piano Service - Booking.html
+*.dc.html
+*Standalone Source.html
+
+# 設計工具產生的暫存 / 原始素材
+.thumbnail
+uploads/
+screenshots/
+
+# 系統檔
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 設計工具 runtime，只被 .dc.html 使用
+support.js
