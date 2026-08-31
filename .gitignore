@@ -19,3 +19,6 @@ support.js
 
 # 本機備忘，不上傳
 assets/pianos/**/放照片說明.txt
+
+# 放進資料夾但網站沒有引用的原始照片（形象照已壓縮存於 assets/）
+/2.jpg
