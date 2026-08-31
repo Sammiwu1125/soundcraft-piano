@@ -46,7 +46,7 @@ img { max-width: 100%; }
   .nav-links { gap: 20px !important; }
   .inv-grid  { grid-template-columns: repeat(2, 1fr) !important; }
   .footer-grid { grid-template-columns: 1.4fr 1fr 1fr !important; gap: 40px !important; }
-  h1 { font-size: 46px !important; }
+  h1, .hero-line2 { font-size: 46px !important; }
 }
 
 /* ── 平板直向：所有多欄版面改單欄 ── */
@@ -60,7 +60,7 @@ img { max-width: 100%; }
   .cities    { grid-template-columns: repeat(2, 1fr) !important; }
   .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 36px !important; }
   .sec-head  { flex-direction: column; align-items: flex-start !important; gap: 12px; }
-  h1 { font-size: 40px !important; }
+  h1, .hero-line2 { font-size: 40px !important; }
   h2 { font-size: 29px !important; }
   blockquote { font-size: 25px !important; line-height: 1.4 !important; }
 }
@@ -94,7 +94,7 @@ img { max-width: 100%; }
 
   .bk-pair   { grid-template-columns: 1fr !important; }
 
-  h1 { font-size: 33px !important; line-height: 1.15 !important; }
+  h1, .hero-line2 { font-size: 33px !important; line-height: 1.15 !important; }
   h2 { font-size: 25px !important; }
   blockquote { font-size: 21px !important; line-height: 1.42 !important; }
 }
@@ -125,3 +125,8 @@ img { max-width: 100%; }
 /* 導覽列的項目一律不換行；logo 是寬版的，1280 以下就要開始縮 */
 .nav-links a { white-space: nowrap; }
 @media (max-width: 1280px) { .nav-logo { height: 76px !important; } }
+
+/* 漸層文字若瀏覽器不支援 background-clip: text，color: transparent 會讓字整個消失 */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-line2 { background: none !important; color: #0B5FB4 !important; }
+}
