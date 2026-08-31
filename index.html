@@ -32,6 +32,39 @@
 .hv22:hover { color: #FFFFFF !important; }
 .hv23:hover { color: #FFFFFF !important; }
 .hv24:hover { color: #FFFFFF !important; }
+
+/* ── Inventory cards + photo gallery (swipeable) ── */
+.inv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; align-items: start; }
+.inv-card { display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #D5E1EC; transition: border-color .18s; }
+.inv-card:hover { border-color: #0B5FB4; }
+.inv-body { padding: 24px 26px 26px; display: flex; flex-direction: column; flex: 1; }
+.inv-cta { display: inline-block; margin-top: 20px; padding: 11px 20px; background: #0B5FB4; color: #FFFFFF !important; font-size: 14px; font-weight: 500; text-align: center; transition: background .18s; }
+.inv-cta:hover { background: #0A54A0; }
+.inv-soon { border-style: dashed; background: transparent; }
+
+.gal { position: relative; height: 260px; background: #E7EEF5; overflow: hidden; }
+.gal-track { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+.gal-track::-webkit-scrollbar { display: none; }
+.gal-slide { flex: 0 0 100%; height: 100%; scroll-snap-align: center; position: relative; }
+.gal-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gal-slide--missing { display: flex; align-items: center; justify-content: center; background-image: repeating-linear-gradient(135deg, rgba(16,42,69,.07) 0 2px, transparent 2px 12px); }
+.gal-slide--missing::after { content: 'PHOTO PENDING'; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #98A1AB; letter-spacing: .1em; }
+
+.gal-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; padding: 0; border: none; border-radius: 50%; background: rgba(255,255,255,.92); color: #102A45; font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .18s; box-shadow: 0 1px 6px rgba(16,42,69,.24); }
+.gal:hover .gal-btn, .gal-btn:focus-visible { opacity: 1; }
+.gal-btn[disabled] { opacity: 0 !important; pointer-events: none; }
+.gal-prev { left: 10px; }
+.gal-next { right: 10px; }
+
+.gal-count { position: absolute; top: 10px; right: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #FFFFFF; background: rgba(16,42,69,.62); padding: 3px 8px; letter-spacing: .06em; }
+.gal-dots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.gal-dot { width: 6px; height: 6px; padding: 0; border: none; border-radius: 50%; background: rgba(255,255,255,.6); cursor: pointer; box-shadow: 0 0 0 1px rgba(16,42,69,.2); transition: width .18s, border-radius .18s, background .18s; }
+.gal-dot[aria-current="true"] { background: #FFFFFF; width: 16px; border-radius: 3px; }
+
+@media (max-width: 900px) {
+  .inv-grid { grid-template-columns: 1fr; }
+  .gal-btn { opacity: 1; }
+}
 </style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -99,69 +132,59 @@
       <a href="#pianos" style="font-size: 15px; font-weight: 500">See all instruments →</a>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px">
-      <a href="#pianos" class="hv9" style="display: block; background: #FFFFFF; border: 1px solid #D5E1EC; color: inherit">
-        <div style="height: 260px; background: #E7EEF5; background-image: repeating-linear-gradient(135deg, rgba(16,42,69,.07) 0 2px, transparent 2px 12px); display: flex; align-items: center; justify-content: center">
-          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #98A1AB; letter-spacing: .1em">[ PIANO PHOTO ]</span>
+    <div class="inv-grid">
+
+      <!-- ── Apollo A.320 ── -->
+      <div class="inv-card">
+        <div class="gal" data-gal>
+          <div class="gal-track">
+            <div class="gal-slide"><img src="assets/pianos/apollo-a320/01-front.jpg" alt="Apollo A.320 upright piano, front angle"></div>
+            <div class="gal-slide"><img src="assets/pianos/apollo-a320/02-angle.jpg" alt="Apollo A.320 upright piano, side angle"></div>
+            <div class="gal-slide"><img src="assets/pianos/apollo-a320/03-logo.jpg" alt="Apollo logo on the fallboard"></div>
+            <div class="gal-slide"><img src="assets/pianos/apollo-a320/04-model-plate.jpg" alt="Model plate reading A.320"></div>
+            <div class="gal-slide"><img src="assets/pianos/apollo-a320/05-serial.jpg" alt="Serial number 97834 on the plate"></div>
+          </div>
+          <button type="button" class="gal-btn gal-prev" aria-label="Previous photo">&#10094;</button>
+          <button type="button" class="gal-btn gal-next" aria-label="Next photo">&#10095;</button>
+          <div class="gal-count"><span data-gal-current>1</span> / <span data-gal-total>5</span></div>
+          <div class="gal-dots" role="tablist" aria-label="Photo navigation"></div>
         </div>
-        <div style="padding: 24px 26px 26px">
-          <div style="font-family: Poppins, sans-serif; font-size: 21px; font-weight: 500; margin-bottom: 6px">Yamaha Upright</div>
-          <div style="font-size: 14px; color: #7B848F; margin-bottom: 22px">Model and specifications to be confirmed</div>
-          <div style="display: flex; align-items: flex-end; gap: 28px; padding-top: 18px; border-top: 1px solid #E6EBF0">
+        <div class="inv-body">
+          <div style="font-family: Poppins, sans-serif; font-size: 21px; font-weight: 500; margin-bottom: 6px">Apollo A.320 Upright</div>
+          <div style="font-size: 14px; color: #7B848F; margin-bottom: 20px">Serial 97834 &middot; Toyo Piano (TPK), Japan</div>
+          <div style="display: flex; align-items: flex-end; gap: 26px; padding-top: 18px; border-top: 1px solid #E6EBF0">
             <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">BUY</div>
-              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500">$—</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">PRICE</div>
+              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500">$1,700 <span style="font-size: 13px; color: #7B848F">CAD</span></div>
             </div>
             <div style="width: 1px; height: 32px; background: #E8EAEE"></div>
             <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">RENT</div>
-              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500; color: #0B5FB4">$— / mo</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">INCLUDED</div>
+              <div style="font-size: 15px; font-weight: 500; color: #0B5FB4">Delivery + tuning</div>
             </div>
           </div>
+          <a href="booking.html" class="inv-cta">Enquire about this piano</a>
         </div>
-      </a>
-      <a href="#pianos" class="hv10" style="display: block; background: #FFFFFF; border: 1px solid #D5E1EC; color: inherit">
-        <div style="height: 260px; background: #E7EEF5; background-image: repeating-linear-gradient(135deg, rgba(16,42,69,.07) 0 2px, transparent 2px 12px); display: flex; align-items: center; justify-content: center">
-          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #98A1AB; letter-spacing: .1em">[ PIANO PHOTO ]</span>
+      </div>
+
+      <!-- ── 下一台上架時，複製上面整個 .inv-card 區塊來改 ── -->
+      <div class="inv-card inv-soon">
+        <div class="gal"><div class="gal-track"><div class="gal-slide gal-slide--missing"></div></div></div>
+        <div class="inv-body">
+          <div style="font-family: Poppins, sans-serif; font-size: 21px; font-weight: 500; margin-bottom: 6px; color: #7B848F">More arriving soon</div>
+          <div style="font-size: 14px; color: #98A1AB">We restore and list instruments as they come through the workshop.</div>
         </div>
-        <div style="padding: 24px 26px 26px">
-          <div style="font-family: Poppins, sans-serif; font-size: 21px; font-weight: 500; margin-bottom: 6px">Kawai Upright</div>
-          <div style="font-size: 14px; color: #7B848F; margin-bottom: 22px">Model and specifications to be confirmed</div>
-          <div style="display: flex; align-items: flex-end; gap: 28px; padding-top: 18px; border-top: 1px solid #E6EBF0">
-            <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">BUY</div>
-              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500">$—</div>
-            </div>
-            <div style="width: 1px; height: 32px; background: #E8EAEE"></div>
-            <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">RENT</div>
-              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500; color: #0B5FB4">$— / mo</div>
-            </div>
-          </div>
+      </div>
+
+      <div class="inv-card inv-soon">
+        <div class="gal"><div class="gal-track"><div class="gal-slide gal-slide--missing"></div></div></div>
+        <div class="inv-body">
+          <div style="font-family: Poppins, sans-serif; font-size: 21px; font-weight: 500; margin-bottom: 6px; color: #7B848F">Looking for something specific?</div>
+          <div style="font-size: 14px; color: #98A1AB">Tell us what you need and we will source it for you.</div>
         </div>
-      </a>
-      <a href="#pianos" class="hv11" style="display: block; background: #FFFFFF; border: 1px solid #D5E1EC; color: inherit">
-        <div style="height: 260px; background: #E7EEF5; background-image: repeating-linear-gradient(135deg, rgba(16,42,69,.07) 0 2px, transparent 2px 12px); display: flex; align-items: center; justify-content: center">
-          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #98A1AB; letter-spacing: .1em">[ PIANO PHOTO ]</span>
-        </div>
-        <div style="padding: 24px 26px 26px">
-          <div style="font-family: Poppins, sans-serif; font-size: 21px; font-weight: 500; margin-bottom: 6px">Grand Piano</div>
-          <div style="font-size: 14px; color: #7B848F; margin-bottom: 22px">Model and specifications to be confirmed</div>
-          <div style="display: flex; align-items: flex-end; gap: 28px; padding-top: 18px; border-top: 1px solid #E6EBF0">
-            <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">BUY</div>
-              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500">$—</div>
-            </div>
-            <div style="width: 1px; height: 32px; background: #E8EAEE"></div>
-            <div>
-              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #9AA3AD; letter-spacing: .1em; margin-bottom: 6px">RENT</div>
-              <div style="font-family: Poppins, sans-serif; font-size: 22px; font-weight: 500; color: #0B5FB4">$— / mo</div>
-            </div>
-          </div>
-        </div>
-      </a>
+      </div>
+
     </div>
-    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7F8DA0; letter-spacing: .06em; margin-top: 22px">PHOTOS AND PRICES PENDING</div>
   </div>
 
   <div id="about" style="background: #102A45; color: #FFFFFF; padding: 100px 72px">
@@ -348,5 +371,6 @@
 
 </div>
 
+<script src="inventory.js"></script>
 </body>
 </html>
