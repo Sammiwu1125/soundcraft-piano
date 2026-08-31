@@ -135,3 +135,18 @@ img { max-width: 100%; }
 /* 標題或副標題折行的張數不一，會讓價格列與按鈕上下錯開。
    卡片等高後把價格列往下推，任何欄寬都能對齊。 */
 .inv-price { margin-top: auto; }
+
+/* ── 中文模式的字體 ──
+   版面的 font-family 寫在 inline style 裡（Poppins / Inter / IBM Plex Mono），
+   這些字體都沒有中文字符，中文會掉到系統預設字體，各裝置長得不一樣。
+   網站本來就有載入 Noto Sans TC，這裡把它接在各字體之後：
+   英數仍用原本的字體，中文才落到 Noto Sans TC。 */
+html[lang="zh-Hant"] body {
+  font-family: Inter, 'Noto Sans TC', Helvetica, Arial, sans-serif;
+}
+html[lang="zh-Hant"] [style*="Poppins"] {
+  font-family: Poppins, 'Noto Sans TC', sans-serif !important;
+}
+html[lang="zh-Hant"] [style*="IBM Plex Mono"] {
+  font-family: 'IBM Plex Mono', 'Noto Sans TC', monospace !important;
+}
