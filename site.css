@@ -109,3 +109,19 @@ img { max-width: 100%; }
 
 /* grid 子項預設 min-width:auto，內容撐不下時會把版面推寬 */
 .split > *, .rgrid > *, .bk-layout > *, .footer-grid > *, .inv-grid > * { min-width: 0; }
+
+/* 中等寬度：導覽列容易擠成多行，先禁止換行並縮 logo，
+   980px 以下直接收起區塊連結，只留電話與預約按鈕 */
+@media (max-width: 1080px) {
+  .nav-links a { white-space: nowrap; }
+  .nav-logo { height: 60px !important; }
+}
+@media (max-width: 980px) {
+  /* 只留電話與預約按鈕；booking.html 的區塊連結用的是 index.html，不能只比對 # */
+  .nav-links > a:not([href^="tel"]):not([href="booking.html"]) { display: none !important; }
+  .nav-links > div { display: none !important; }
+}
+
+/* 導覽列的項目一律不換行；logo 是寬版的，1280 以下就要開始縮 */
+.nav-links a { white-space: nowrap; }
+@media (max-width: 1280px) { .nav-logo { height: 76px !important; } }
