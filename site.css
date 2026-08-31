@@ -52,7 +52,7 @@ img { max-width: 100%; }
 /* ── 平板直向：所有多欄版面改單欄 ── */
 @media (max-width: 820px) {
   .hero      { grid-template-columns: 1fr !important; }
-  .hero-art  { min-height: 300px !important; }
+  .hero-art  { min-height: 380px !important; }
   .split     { grid-template-columns: 1fr !important; }
   .split-a   { border-right: none !important; border-bottom: 1px solid #EDEFF2 !important; }
   .rgrid     { grid-template-columns: 1fr !important; gap: 36px !important; }
@@ -72,7 +72,7 @@ img { max-width: 100%; }
   .hero-copy { padding: 44px 20px 48px !important; }
   .split-a   { padding: 48px 20px !important; }
   .split-b   { padding: 48px 20px !important; }
-  .hero-art  { min-height: 210px !important; }
+  .hero-art  { min-height: 300px !important; }
 
   /* 導覽列改兩行：logo 一行，電話與預約按鈕一行，避免擠爆 */
   .nav-bar   { flex-wrap: wrap; gap: 10px; padding: 12px 20px !important; }
@@ -149,4 +149,15 @@ html[lang="zh-Hant"] [style*="Poppins"] {
 }
 html[lang="zh-Hant"] [style*="IBM Plex Mono"] {
   font-family: 'IBM Plex Mono', 'Noto Sans TC', monospace !important;
+}
+
+/* 首屏形象照：填滿右側區塊，裁切時偏上保留調音的手與扳手 */
+.hero-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 32%;
+  display: block;
 }
