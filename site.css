@@ -130,3 +130,6 @@ img { max-width: 100%; }
 @supports not ((-webkit-background-clip: text) or (background-clip: text)) {
   .hero-line2 { background: none !important; color: #0B5FB4 !important; }
 }
+
+/* 副標題有的一行有的兩行，固定高度讓各卡片的價格列與按鈕對齊 */
+.inv-sub { min-height: 39px; }
