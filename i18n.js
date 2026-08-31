@@ -84,8 +84,7 @@
     // ── 評論 ──
     'GOOGLE REVIEW · ★★★★★': 'GOOGLE 評論 · ★★★★★',
     'GOOGLE REVIEW': 'GOOGLE 評論',
-    '“Tuned my Yamaha CP-80 which hadn\'t been tuned at all this century. Highly recommend, thanks so much Rick!”':
-      '「幫我調好了一台整個世紀都沒調過音的 Yamaha CP-80。非常推薦，真的很謝謝 Rick！」',
+    // 客人的評論保留英文原文，不翻譯（翻過就不是他原本寫的字了）
 
     // ── 常見問題 ──
     'QUESTIONS': '常見問題',
