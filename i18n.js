@@ -35,6 +35,8 @@
     'Satin wood cabinet · Matching bench included': '木質霧面外殼 · 附同款琴椅',
     'Yamaha M5J Upright': 'Yamaha M5J 直立鋼琴',
     'Walnut cabinet · Three pedals': '胡桃木外殼 · 三踏板',
+    'Kawai BS-2N Upright': 'Kawai BS-2N 直立鋼琴',
+    'Polished ebony · Three pedals': '鏡面黑檀烤漆 · 三踏板',
     'PRICE': '售價',
     'CAD': '加幣',
     'INCLUDED': '已包含',
