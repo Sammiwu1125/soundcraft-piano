@@ -126,6 +126,37 @@
     'Monday – Saturday': '週一至週六',
     'PAGES': '網站導覽',
 
+    // ── 確認頁（第二階段，客戶補地址）──
+    'CONFIRM YOUR VISIT': '確認到府資訊',
+    'One last thing — where are we coming?': '最後一件事 —— 我們要去哪裡？',
+    'We have your request. Add the address and we will lock in the visit.':
+      '我們已經收到你的需求。留下地址，就可以把時間確定下來。',
+    'YOUR REQUEST': '你的需求',
+    'REF': '編號',
+    'NAME': '姓名',
+    'SERVICE': '服務項目',
+    'CITY': '城市',
+    'DATE': '日期',
+    'TIME': '時段',
+    'Where the piano is': '鋼琴放在哪裡',
+    'Street address': '街道地址',
+    'Unit or apartment': '單位或門牌號',
+    'Postal code': '郵遞區號',
+    'Access notes': '進出說明',
+    'Confirm the address': '確認地址',
+    'Nothing is charged at this step.': '這一步不會產生任何費用。',
+    'ADDRESS RECEIVED': '已收到地址',
+    'Thank you — we have your address.': '謝謝你，我們已收到地址。',
+    'We will confirm the visit by phone or email shortly. If anything changes, call or text us at':
+      '我們很快會用電話或電子郵件跟你確認。如果有任何變動，請來電或傳簡訊到',
+    'This link is missing its details.': '這個連結缺少必要的資訊。',
+    'Please use the link from our reply, or call or text us at':
+      '請使用我們回信裡的那條連結，或來電、傳簡訊到',
+    'and we will take the address over the phone.': '我們會用電話記下你的地址。',
+    'Start a new request': '重新填一份預約',
+    'We could not send your address just now. Please try again, or call or text us at (236) 622-5636.':
+      '目前沒有辦法送出你的地址。請再試一次，或來電、傳簡訊到 (236) 622-5636。',
+
     // ── 預約頁 ──
     'BOOK A SERVICE': '預約服務',
     'Tell us about your piano.': '告訴我們你的鋼琴狀況。',
@@ -145,8 +176,8 @@
     'Name': '姓名',
     'Phone': '電話',
     'Email': '電子郵件',
-    'Either one is enough — whichever you prefer we use.': '兩者擇一即可，你方便哪一種我們就用哪一種。',
-    'Please add a phone number or an email address so we can reply.': '請留下電話或電子郵件，我們才能回覆你。',
+    'We use your phone to confirm the visit and your email to send the details.':
+      '我們用電話跟你確認到府時間，用電子郵件寄給你詳細內容。',
 
     'What you need, and where': '你需要什麼服務、在哪裡',
     'Service': '服務項目',
@@ -196,14 +227,20 @@
   var ZH_PLACEHOLDER = {
     'First and last name': '你的姓名',
     'Make and model if you know it, sticking keys, buzzing notes, recent moves, stairs at the entrance.':
-      '知道的話請寫下品牌與型號，以及琴鍵卡住、雜音、最近搬過家、門口有樓梯等狀況。'
+      '知道的話請寫下品牌與型號，以及琴鍵卡住、雜音、最近搬過家、門口有樓梯等狀況。',
+    // 確認頁
+    '1234 Main Street': '例：1234 Main Street',
+    'Optional': '選填',
+    'V6B 1A1': '例：V6B 1A1',
+    'Stairs, elevator, buzzer code, where to park.': '樓梯、電梯、門禁密碼、停車位置。'
   };
 
   // 分頁標題
   var ZH_TITLE = {
     'Soundcraft Piano Service — Piano Tuning, Repair & Sales in Greater Vancouver':
       'Soundcraft 鋼琴服務 — 大溫哥華地區鋼琴調音、維修與買賣',
-    'Book a Service — Soundcraft Piano Service': '預約服務 — Soundcraft 鋼琴服務'
+    'Book a Service — Soundcraft Piano Service': '預約服務 — Soundcraft 鋼琴服務',
+    'Confirm your visit — Soundcraft Piano Service': '確認到府資訊 — Soundcraft 鋼琴服務'
   };
 
   var KEY = 'soundcraft-lang';

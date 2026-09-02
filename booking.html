@@ -92,18 +92,15 @@
 
           <div class="bk-pair" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
             <div>
-              <label for="bk-phone" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Phone</label>
-              <input id="bk-phone" name="phone" type="tel" placeholder="(604) 000-0000" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+              <label for="bk-phone" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Phone <span style="color: #0B5FB4">*</span></label>
+              <input id="bk-phone" name="phone" type="tel" required="required" placeholder="(604) 000-0000" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
             </div>
             <div>
-              <label for="bk-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Email</label>
-              <input id="bk-email" name="email" type="email" placeholder="you@example.com" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+              <label for="bk-email" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Email <span style="color: #0B5FB4">*</span></label>
+              <input id="bk-email" name="email" type="email" required="required" placeholder="you@example.com" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
             </div>
           </div>
-          <div id="contact-hint" style="font-size: 13px; color: #6B7683; margin-top: -12px">Either one is enough — whichever you prefer we use.</div>
-          <div id="contact-error" style="display: none; align-items: center; gap: 10px; margin-top: -12px; padding: 12px 14px; background: #FDF3EC; border-left: 3px solid #F2740B">
-            <span style="font-size: 13px; font-weight: 500; color: #8A4407">Please add a phone number or an email address so we can reply.</span>
-          </div>
+          <div id="contact-hint" style="font-size: 13px; color: #6B7683; margin-top: -12px">We use your phone to confirm the visit and your email to send the details.</div>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 24px">
@@ -312,7 +309,7 @@
 
 </div>
 
-<script src="booking.js?v=3"></script>
-<script src="i18n.js?v=6"></script>
+<script src="booking.js?v=4"></script>
+<script src="i18n.js?v=7"></script>
 </body>
 </html>

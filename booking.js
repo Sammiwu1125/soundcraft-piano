@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var form = document.getElementById('booking-form');
   var formView = document.getElementById('form-view');
   var successView = document.getElementById('success-view');
-  var contactHint = document.getElementById('contact-hint');
-  var contactError = document.getElementById('contact-error');
   var resetBtn = document.getElementById('reset-btn');
   var sendBtn = document.getElementById("send-btn");
   var sendError = document.getElementById("send-error");
@@ -15,14 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     return document.documentElement.lang === 'zh-Hant' ? '送出中…' : 'Sending…';
   }
 
-  function showError() {
-    contactHint.style.display = 'none';
-    contactError.style.display = 'flex';
-  }
-  function clearError() {
-    contactHint.style.display = 'block';
-    contactError.style.display = 'none';
-  }
 
   // ── 到府日期：不接受過去的日期，週日不營業 ──
   var dateEl = document.getElementById('bk-date');
@@ -65,13 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var f = new FormData(form);
     var g = function (k) { return (f.get(k) || '').toString().trim(); };
 
-    if (!g('phone') && !g('email')) {
-      showError();
-      var phoneEl = document.getElementById('bk-phone');
-      if (phoneEl) phoneEl.focus();
-      return;
-    }
-    clearError();
 
     // 週日不營業，送出前擋下
     if (isSunday(g('preferredDate'))) {
@@ -96,11 +79,30 @@ document.addEventListener('DOMContentLoaded', function () {
       ' — ' + (g('name') || 'Website') + (g('city') ? ', ' + g('city') : '');
 
     // 送給 Formspree 的欄位。底線開頭的是它的指令欄位，不會出現在信件內容裡。
+    // 給這筆詢問一個編號，兩封信才對得起來
+    var ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-4) +
+      Math.random().toString(36).slice(2, 5).toUpperCase();
+
+    // 第二階段的專屬連結，直接放進通知信，回覆客戶時貼上即可
+    var params = new URLSearchParams();
+    params.set('ref', ref);
+    if (g('name')) params.set('n', g('name'));
+    if (g('phone')) params.set('p', g('phone'));
+    if (g('email')) params.set('e', g('email'));
+    if (g('service')) params.set('s', g('service'));
+    if (g('city')) params.set('c', g('city'));
+    if (g('preferredDate')) params.set('d', g('preferredDate'));
+    if (g('preferred')) params.set('t', g('preferred'));
+    var confirmUrl = location.origin +
+      location.pathname.replace(/[^/]*$/, '') + 'confirm.html?' + params.toString();
+
     var payload = new FormData();
     payload.append('_subject', subject);
+    payload.append('Reference', ref);
     rows.forEach(function (r) { payload.append(r[0], r[1]); });
     if (g('notes')) payload.append('Notes', g('notes'));
     if (g('email')) payload.append('_replyto', g('email'));
+    payload.append('Address link — send this to the customer', confirmUrl);
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
 
     sendError.style.display = 'none';
@@ -135,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   resetBtn.addEventListener('click', function () {
     form.reset();
-    clearError();
     showDateError(false);
     successView.style.display = 'none';
     formView.style.display = 'block';
