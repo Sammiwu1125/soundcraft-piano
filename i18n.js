@@ -141,7 +141,6 @@
     'Where the piano is': '鋼琴放在哪裡',
     'Street address': '街道地址',
     'Unit or apartment': '單位或門牌號',
-    'Postal code': '郵遞區號',
     'Access notes': '進出說明',
     'Confirm the address': '確認地址',
     'Nothing is charged at this step.': '這一步不會產生任何費用。',
@@ -231,7 +230,6 @@
     // 確認頁
     '1234 Main Street': '例：1234 Main Street',
     'Optional': '選填',
-    'V6B 1A1': '例：V6B 1A1',
     'Stairs, elevator, buzzer code, where to park.': '樓梯、電梯、門禁密碼、停車位置。'
   };
 

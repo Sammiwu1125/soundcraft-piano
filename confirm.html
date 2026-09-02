@@ -103,8 +103,23 @@
               <input id="cf-unit" name="unit" type="text" placeholder="Optional" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
             </div>
             <div>
-              <label for="cf-postal" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Postal code <span style="color: #0B5FB4">*</span></label>
-              <input id="cf-postal" name="postal" type="text" required="required" placeholder="V6B 1A1" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+              <label for="cf-city" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">City <span style="color: #0B5FB4">*</span></label>
+              <select id="cf-city" name="city" required="required" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 15px 40px 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background-color: #FFFFFF">
+                <option value="">Select a city</option>
+                <option value="Vancouver">Vancouver</option>
+                <option value="Burnaby">Burnaby</option>
+                <option value="Richmond">Richmond</option>
+                <option value="Surrey">Surrey</option>
+                <option value="Coquitlam">Coquitlam</option>
+                <option value="Port Coquitlam">Port Coquitlam</option>
+                <option value="New Westminster">New Westminster</option>
+                <option value="North Vancouver">North Vancouver</option>
+                <option value="West Vancouver">West Vancouver</option>
+                <option value="Delta">Delta</option>
+                <option value="Langley">Langley</option>
+                <option value="White Rock">White Rock</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
 
@@ -183,7 +198,7 @@
 
 </div>
 
-<script src="confirm.js?v=2"></script>
-<script src="i18n.js?v=7"></script>
+<script src="confirm.js?v=3"></script>
+<script src="i18n.js?v=8"></script>
 </body>
 </html>

@@ -23,6 +23,7 @@
   var city = get('c');
   var dateRaw = get('d');
   var slot = get('t');
+  var cityEl = document.getElementById('cf-city');
 
   // 連結不完整就不要讓客戶白填一遍，直接請他改用回信裡的連結或打電話
   if (!ref || !name) {
@@ -59,9 +60,11 @@
   addRow('REF', ref);
   addRow('NAME', name);
   addRow('SERVICE', service);
-  addRow('CITY', city);
   addRow('DATE', formatDate(dateRaw));
   addRow('TIME', slot);
+
+  // 城市預設帶入原本詢問時選的那個，客戶仍可改（地址可能不在同一市）
+  if (cityEl && city) cityEl.value = city;
 
   view.style.display = 'block';
 
@@ -74,8 +77,9 @@
     var f = new FormData(form);
     var g = function (k) { return (f.get(k) || '').toString().trim(); };
 
+    var chosenCity = g('city');
     var address = g('street') + (g('unit') ? ', ' + g('unit') : '') +
-      (city ? ', ' + city : '') + (g('postal') ? '  ' + g('postal') : '');
+      (chosenCity ? ', ' + chosenCity : '') + ', BC';
 
     var payload = new FormData();
     payload.append('_subject', 'Address confirmed — ' + ref + ' — ' + name);
@@ -86,6 +90,7 @@
     if (service) payload.append('Service', service);
     if (dateRaw) payload.append('Preferred date', formatDate(dateRaw));
     if (slot) payload.append('Preferred time', slot);
+    payload.append('City', chosenCity);
     payload.append('Address', address);
     if (g('access')) payload.append('Access notes', g('access'));
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
