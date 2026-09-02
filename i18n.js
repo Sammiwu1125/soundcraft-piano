@@ -138,6 +138,9 @@
     'CITY': '城市',
     'DATE': '日期',
     'TIME': '時段',
+    'When we come': '到府時間',
+    'We visit Monday to Saturday. Change this if the time no longer works.':
+      '我們的到府服務為週一至週六。時間如果有變動，請直接在這裡修改。',
     'Where the piano is': '鋼琴放在哪裡',
     'Street address': '街道地址',
     'Unit or apartment': '單位或門牌號',

@@ -89,6 +89,34 @@
         <form id="confirm-form" style="display: flex; flex-direction: column; gap: 24px">
           <div style="display: flex; align-items: baseline; gap: 14px; padding-bottom: 6px; border-bottom: 1px solid #111418">
             <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em">01</div>
+            <div style="font-family: Poppins, sans-serif; font-size: 17px; font-weight: 500">When we come</div>
+          </div>
+
+          <div>
+            <label for="cf-date" style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 9px">Preferred date and time <span style="color: #0B5FB4">*</span></label>
+            <input id="cf-date" name="preferredDate" type="date" required="required" style="width: 100%; box-sizing: border-box; font-size: 16px; color: #111418; padding: 14px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+            <div class="slot-group" role="radiogroup" aria-label="Time slot">
+              <label class="slot">
+                <input type="radio" name="preferred" value="Morning (10:00 - 12:00)" required="required">
+                <span class="slot-box"><span class="slot-name">Morning</span><span class="slot-time">10:00 – 12:00</span></span>
+              </label>
+              <label class="slot">
+                <input type="radio" name="preferred" value="Afternoon (2:00 - 4:00)">
+                <span class="slot-box"><span class="slot-name">Afternoon</span><span class="slot-time">2:00 – 4:00</span></span>
+              </label>
+              <label class="slot">
+                <input type="radio" name="preferred" value="Evening (6:00 - 8:00)">
+                <span class="slot-box"><span class="slot-name">Evening</span><span class="slot-time">6:00 – 8:00</span></span>
+              </label>
+            </div>
+            <div style="font-size: 13px; color: #7B848F; margin-top: 10px">We visit Monday to Saturday. Change this if the time no longer works.</div>
+            <div id="cf-date-error" style="display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 12px 14px; background: #FDF3EC; border-left: 3px solid #F2740B">
+              <span style="font-size: 14px; color: #8A4B12">Sundays are not available. Please choose another day.</span>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: baseline; gap: 14px; padding-bottom: 6px; border-bottom: 1px solid #111418; margin-top: 14px">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #0B5FB4; letter-spacing: .14em">02</div>
             <div style="font-family: Poppins, sans-serif; font-size: 17px; font-weight: 500">Where the piano is</div>
           </div>
 
@@ -198,7 +226,7 @@
 
 </div>
 
-<script src="confirm.js?v=3"></script>
-<script src="i18n.js?v=8"></script>
+<script src="confirm.js?v=4"></script>
+<script src="i18n.js?v=9"></script>
 </body>
 </html>
