@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var NOTIFY_EMAIL = 'rrrick1324@gmail.com';
+  var FORM_ENDPOINT = "https://formspree.io/f/mbgjdgrp";
 
   var form = document.getElementById('booking-form');
   var formView = document.getElementById('form-view');
@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var contactHint = document.getElementById('contact-hint');
   var contactError = document.getElementById('contact-error');
   var resetBtn = document.getElementById('reset-btn');
+  var sendBtn = document.getElementById("send-btn");
+  var sendError = document.getElementById("send-error");
+  var sendLabel = sendBtn ? sendBtn.textContent : "Send request";
+  // 送出中的字樣要跟著網站語言走
+  function sendingLabel() {
+    return document.documentElement.lang === 'zh-Hant' ? '送出中…' : 'Sending…';
+  }
 
   function showError() {
     contactHint.style.display = 'none';
@@ -73,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     showDateError(false);
-
     var rows = [
       ['Name', g('name')],
       ['Phone', g('phone')],
@@ -86,19 +92,45 @@ document.addEventListener('DOMContentLoaded', function () {
       ['Preferred time', g('preferred')]
     ].filter(function (r) { return r[1]; });
 
-    var body = 'New service request from the website\n\n';
-    body += rows.map(function (r) { return r[0] + ': ' + r[1]; }).join('\n');
-    if (g('notes')) body += '\n\nNotes:\n' + g('notes');
-
     var subject = 'Service request — ' + (g('service') || 'Piano service') +
       ' — ' + (g('name') || 'Website') + (g('city') ? ', ' + g('city') : '');
 
-    window.location.href = 'mailto:' + NOTIFY_EMAIL +
-      '?subject=' + encodeURIComponent(subject) +
-      '&body=' + encodeURIComponent(body);
+    // 送給 Formspree 的欄位。底線開頭的是它的指令欄位，不會出現在信件內容裡。
+    var payload = new FormData();
+    payload.append('_subject', subject);
+    rows.forEach(function (r) { payload.append(r[0], r[1]); });
+    if (g('notes')) payload.append('Notes', g('notes'));
+    if (g('email')) payload.append('_replyto', g('email'));
+    if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
 
-    formView.style.display = 'none';
-    successView.style.display = 'block';
+    sendError.style.display = 'none';
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = '.6';
+    sendBtn.style.cursor = 'default';
+    var restore = function () {
+      sendBtn.disabled = false;
+      sendBtn.style.opacity = '';
+      sendBtn.style.cursor = 'pointer';
+      sendBtn.textContent = sendLabel;
+    };
+    sendBtn.textContent = sendingLabel();
+
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      body: payload,
+      headers: { 'Accept': 'application/json' }
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      restore();
+      formView.style.display = 'none';
+      successView.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }).catch(function () {
+      // 網路不通或服務異常時據實顯示，不要假裝送出成功
+      restore();
+      sendError.style.display = 'flex';
+      sendError.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
   });
 
   resetBtn.addEventListener('click', function () {

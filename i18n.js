@@ -131,13 +131,13 @@
     'Tell us about your piano.': '告訴我們你的鋼琴狀況。',
     'Send us a few details and we will reply with a time and a price. No payment is taken and nothing is confirmed until you agree to both.':
       '留下幾項資訊，我們會回覆時間與價格。不需要先付款，雙方都同意之前不會成立預約。',
-    'REQUEST READY TO SEND': '預約單已備妥',
-    'Your email client is opening.': '正在開啟你的郵件軟體。',
-    'Your request has been placed in a new email to': '你的預約內容已放進一封新郵件，收件人是',
-    '. Press send in your mail app and we will reply within one business day, Monday to Saturday.':
-      '。請在郵件軟體按下寄出，我們會在一個工作天內回覆（週一至週六）。',
-    'If nothing opened, call or text us at': '如果沒有自動開啟，請來電或傳簡訊到',
-    'and we will take the details over the phone.': '我們會用電話記下你的需求。',
+    'REQUEST RECEIVED': '已收到預約',
+    'Thank you — we have your request.': '謝謝你，我們已收到你的預約。',
+    'We will reply within one business day, Monday to Saturday, with a time window and a price for you to approve.':
+      '我們會在一個工作天內回覆（週一至週六），提供到府時段與報價，等你確認。',
+    'If it is urgent, call or text us at': '如果比較急，請來電或傳簡訊到',
+    'We could not send your request just now. Please try again, or call or text us at (236) 622-5636.':
+      '目前沒有辦法送出你的預約。請再試一次，或來電、傳簡訊到 (236) 622-5636。',
     'Back to home': '回到首頁',
     'Send another request': '再送一筆預約',
 
