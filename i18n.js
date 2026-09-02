@@ -61,8 +61,8 @@
     // ── 服務流程 ──
     'HOW IT WORKS': '服務流程',
     'Tell us about your piano': '告訴我們你的琴',
-    'Send the make, model, and roughly when it was last tuned. A photo helps.':
-      '提供品牌、型號，以及大概多久沒調音了。附一張照片會更好判斷。',
+    'Send the make, model, and roughly when it was last tuned.':
+      '提供品牌、型號，以及大概多久沒調音了。',
     'We confirm a time and a price': '我們確認時間與價格',
     'You get a clear quote and a time window before anything is booked.':
       '正式成立預約之前，你會先拿到明確的報價和到府時段。',
