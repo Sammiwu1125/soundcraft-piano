@@ -161,3 +161,20 @@ html[lang="zh-Hant"] [style*="IBM Plex Mono"] {
   object-position: center 32%;
   display: block;
 }
+
+/* ── 預約頁：到府時段選擇 ── */
+.slot-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.slot { flex: 1 1 150px; margin: 0; }
+.slot input { position: absolute; opacity: 0; width: 0; height: 0; }
+.slot-box {
+  display: block; padding: 12px 14px; text-align: center; cursor: pointer;
+  background: #FFFFFF; border: 1px solid #D5E1EC; border-radius: 5px;
+  transition: border-color .15s, background .15s;
+}
+.slot-name { display: block; font-size: 14px; font-weight: 500; color: #111418; }
+.slot-time { display: block; margin-top: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7B848F; }
+.slot:hover .slot-box { border-color: #0B5FB4; }
+.slot input:checked + .slot-box { border-color: #0B5FB4; background: #F2F7FC; box-shadow: inset 0 0 0 1px #0B5FB4; }
+.slot input:checked + .slot-box .slot-time { color: #0B5FB4; }
+.slot input:focus-visible + .slot-box { outline: 2px solid #0B5FB4; outline-offset: 2px; }
+@media (max-width: 560px) { .slot { flex: 1 1 100%; } }

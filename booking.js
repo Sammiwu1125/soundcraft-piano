@@ -17,6 +17,42 @@ document.addEventListener('DOMContentLoaded', function () {
     contactError.style.display = 'none';
   }
 
+  // ── 到府日期：不接受過去的日期，週日不營業 ──
+  var dateEl = document.getElementById('bk-date');
+  var dateError = document.getElementById('date-error');
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // 'YYYY-MM-DD' 要當成當地日期解析。交給 new Date() 會被當成 UTC 午夜，
+  // 溫哥華在 UTC-7/-8，日期會整個往前一天。
+  function parseDate(v) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || '');
+    return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null;
+  }
+  function formatDate(v) {
+    var d = parseDate(v);
+    if (!d) return '';
+    return DAYS[d.getDay()] + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  function isSunday(v) {
+    var d = parseDate(v);
+    return !!d && d.getDay() === 0;
+  }
+  function showDateError(on) {
+    if (dateError) dateError.style.display = on ? 'flex' : 'none';
+    if (dateEl) dateEl.style.borderColor = on ? '#F2740B' : '#D5E1EC';
+  }
+
+  if (dateEl) {
+    var today = new Date();
+    dateEl.min = today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+      String(today.getDate()).padStart(2, '0');
+    dateEl.addEventListener('change', function () {
+      showDateError(isSunday(dateEl.value));
+    });
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var f = new FormData(form);
@@ -30,6 +66,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     clearError();
 
+    // 週日不營業，送出前擋下
+    if (isSunday(g('preferredDate'))) {
+      showDateError(true);
+      if (dateEl) { dateEl.focus(); dateEl.scrollIntoView({ block: 'center' }); }
+      return;
+    }
+    showDateError(false);
+
     var rows = [
       ['Name', g('name')],
       ['Phone', g('phone')],
@@ -38,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ['City', g('city')],
       ['Piano', g('pianoType')],
       ['Last tuned', g('lastTuned')],
+      ['Preferred date', formatDate(g('preferredDate'))],
       ['Preferred time', g('preferred')]
     ].filter(function (r) { return r[1]; });
 
@@ -59,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
   resetBtn.addEventListener('click', function () {
     form.reset();
     clearError();
+    showDateError(false);
     successView.style.display = 'none';
     formView.style.display = 'block';
   });
