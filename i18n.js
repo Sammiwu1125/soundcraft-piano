@@ -126,11 +126,22 @@
     'Monday – Saturday': '週一至週六',
     'PAGES': '網站導覽',
 
-    // ── 確認頁（第二階段，客戶補地址）──
-    'CONFIRM YOUR VISIT': '確認到府資訊',
-    'One last thing — where are we coming?': '最後一件事 —— 我們要去哪裡？',
-    'We have your request. Add the address and we will lock in the visit.':
-      '我們已經收到你的需求。留下地址，就可以把時間確定下來。',
+    // ── 改期頁（只在需要更動時間時才寄給客戶）──
+    'CHANGE YOUR TIME': '更改到府時間',
+    'Need a different time?': '需要換一個時間嗎？',
+    'Pick a new date and time that suits you. Everything else stays as it is.':
+      '選一個你方便的日期與時段就好，其他資料都不用重填。',
+    'NEW TIME RECEIVED': '已收到新的時間',
+    'Thank you — we have your new time.': '謝謝你，我們已收到新的時間。',
+    'We will send you a written confirmation shortly. If anything changes, call or text us at':
+      '我們很快會寄一封確認信給你。如果有任何變動，請來電或傳簡訊到',
+    'and we will sort the time out over the phone.': '我們會用電話跟你把時間喬好。',
+    'Confirm the new time': '確認新的時間',
+    'We could not send your new time just now. Please try again, or call or text us at (236) 622-5636.':
+      '目前沒有辦法送出新的時間。請再試一次，或來電、傳簡訊到 (236) 622-5636。',
+    'Street address': '街道地址',
+    'Unit or apartment': '單位或門牌號',
+    'Access notes': '進出說明',
     'YOUR REQUEST': '你的需求',
     'REF': '編號',
     'NAME': '姓名',
@@ -143,19 +154,13 @@
     'Evening (6:00 - 8:00)': '傍晚 6:00 – 8:00',
     'The date you asked for has already passed. Please choose a new date and time.':
       '你原本預約的日期已經過了，請重新選擇日期與時段。',
-    'This is different from the date and time shown above. If you did not mean to change it, please set it back.':
-      '這與上方顯示的預約時間不同。如果不是你想改的，請改回原本的時間。',
+    'This will change the visit from the time shown above. We will send you a written confirmation once you submit.':
+      '送出後，到府時間會從上方顯示的時間改成你新選的這個時間，我們會再寄一封確認信給你。',
     'CITY': '城市',
     'When we come': '到府時間',
     'We visit Monday to Saturday. Change this if the time no longer works.':
       '我們的到府服務為週一至週六。時間如果有變動，請直接在這裡修改。',
-    'Where the piano is': '鋼琴放在哪裡',
-    'Street address': '街道地址',
-    'Unit or apartment': '單位或門牌號',
-    'Access notes': '進出說明',
-    'Confirm the address': '確認地址',
     'Nothing is charged at this step.': '這一步不會產生任何費用。',
-    'ADDRESS RECEIVED': '已收到地址',
     'Thank you — we have your address.': '謝謝你，我們已收到地址。',
     'We will confirm the visit by phone or email shortly. If anything changes, call or text us at':
       '我們很快會用電話或電子郵件跟你確認。如果有任何變動，請來電或傳簡訊到',

@@ -55,7 +55,12 @@
     bookingsHint: '這些預約還沒開過工單。點一下就會用客戶填的資料開一張新工單。',
     fromBooking: '預約時客戶填的',
     bkService: '服務項目', bkPreferred: '希望時段', bkNotes: '客戶備註',
-    bkAccess: '進出說明', bkEmail: '電子郵件', bkAwaitingAddress: '尚未確認地址'
+    bkAccess: '進出說明', bkEmail: '電子郵件', bkAwaitingAddress: '尚未填地址',
+    // 寄給客戶的動作
+    sendConfirm: '寄確認信', sendReschedule: '寄改期連結',
+    noEmail: '這筆預約沒有留電子郵件，請直接打電話給客戶。',
+    copied: '已複製到剪貼簿，貼進信件即可。',
+    copyFailed: '複製失敗，請手動選取內文複製。'
   };
 
   var lang = 'en';
@@ -344,8 +349,136 @@
       btn.appendChild(ref);
       btn.appendChild(meta);
       btn.addEventListener('click', function () { go('#/from/' + encodeURIComponent(b.ref)); });
-      box.appendChild(btn);
+
+      // 寄信的按鈕不能放在 btn 裡面 —— 那顆整塊都是「開工單」的點擊區，
+      // 巢狀的按鈕點下去會連帶觸發外層
+      var actions = document.createElement('div');
+      actions.className = 'tk-bk-actions';
+      [[T('sendConfirm', 'Send confirmation'), 'tk-btn--ghost', confirmEmail],
+       [T('sendReschedule', 'Send reschedule link'), 'tk-btn--ghost', rescheduleEmail]
+      ].forEach(function (a) {
+        var el = document.createElement('button');
+        el.type = 'button';
+        el.className = 'tk-btn ' + a[1] + ' tk-btn--sm';
+        el.textContent = a[0];
+        el.addEventListener('click', function () { openMail(a[2](b)); });
+        actions.appendChild(el);
+      });
+
+      var wrap = document.createElement('div');
+      wrap.className = 'tk-bk-row';
+      wrap.appendChild(btn);
+      wrap.appendChild(actions);
+      box.appendChild(wrap);
     });
+  }
+
+  // ── 寄信給客戶 ──
+  // 網站是純靜態的，沒有寄信的能力，所以這裡不「代寄」，而是把信寫好、
+  // 開啟你的信箱，由你自己按送出。好處是信從你的信箱寄出、客戶回信也回到你這裡，
+  // 而且送出前你隨時可以改內容。
+  var SLOT_HOURS = {
+    'Morning (10:00 - 12:00)': ['100000', '120000'],
+    'Afternoon (2:00 - 4:00)': ['140000', '160000'],
+    'Evening (6:00 - 8:00)': ['180000', '200000']
+  };
+
+  function calendarLink(dateISO, slotValue, title, location, details) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateISO || '');
+    var hours = SLOT_HOURS[slotValue];
+    if (!p || !hours) return '';
+    var ymd = p[1] + p[2] + p[3];
+    var cal = new URLSearchParams();
+    cal.set('action', 'TEMPLATE');
+    cal.set('text', title);
+    cal.set('dates', ymd + 'T' + hours[0] + '/' + ymd + 'T' + hours[1]);
+    // 時區交給 Google 用溫哥華解讀，不自己換算 UTC（換季時容易差一小時）
+    cal.set('ctz', 'America/Vancouver');
+    if (location) cal.set('location', location);
+    if (details) cal.set('details', details);
+    return 'https://calendar.google.com/calendar/render?' + cal.toString();
+  }
+
+  function confirmEmail(b) {
+    var when = [prettyDate(b.preferred_date), b.preferred_time].filter(Boolean).join(' · ');
+    var cal = calendarLink(b.preferred_date, b.preferred_time,
+      (b.service || 'Piano service') + ' — Soundcraft Piano Service', b.address,
+      'Ref: ' + (b.ref || ''));
+
+    // 用不到的行放 null，空字串是刻意留的段落空行 —— 兩者要分清楚，
+    // 否則整封信會擠成一團
+    var body = [
+      'Hi ' + (b.name || '') + ',',
+      '',
+      'Your visit is confirmed. Here are the details:',
+      '',
+      '  Service:  ' + (b.service || ''),
+      '  Date:     ' + prettyDate(b.preferred_date),
+      '  Time:     ' + (b.preferred_time || ''),
+      '  Address:  ' + (b.address || ''),
+      (b.brand || b.piano_type) ? '  Piano:    ' + [b.brand, b.piano_type].filter(Boolean).join(', ') : null,
+      '  Ref:      ' + (b.ref || ''),
+      '',
+      cal ? 'Add it to your calendar:' : null,
+      cal ? cal : null,
+      cal ? '' : null,
+      'We will call or text if anything changes on our side. If you need a',
+      'different time, just reply to this email or call us at (236) 622-5636.',
+      '',
+      'Thank you,',
+      'Soundcraft Piano Service',
+      '(236) 622-5636 · soundcraftpianoservice.ca'
+    ].filter(function (l) { return l !== null; }).join('\n');
+
+    return {
+      to: b.email || '',
+      subject: 'Your piano service is confirmed — ' + when,
+      body: body
+    };
+  }
+
+  function rescheduleEmail(b) {
+    var params = new URLSearchParams();
+    params.set('ref', b.ref || '');
+    if (b.name) params.set('n', b.name);
+    if (b.service) params.set('s', b.service);
+    if (b.preferred_date) params.set('d', b.preferred_date);
+    if (b.preferred_time) params.set('t', b.preferred_time);
+    var link = location.origin + location.pathname.replace(/[^/]*$/, '') +
+      'confirm.html?' + params.toString();
+
+    return {
+      to: b.email || '',
+      subject: 'Choosing a new time — ' + (b.ref || ''),
+      body: [
+        'Hi ' + (b.name || '') + ',',
+        '',
+        'Thank you for your request. The time you asked for is not available,',
+        'so could you pick another one here?',
+        '',
+        link,
+        '',
+        'Everything else you filled in is already saved — you only need to',
+        'choose a new date and time.',
+        '',
+        'Thank you,',
+        'Soundcraft Piano Service',
+        '(236) 622-5636 · soundcraftpianoservice.ca'
+      ].join('\n')
+    };
+  }
+
+  // Gmail 的撰寫視窗。用 mailto: 的話會開啟系統預設信件程式，
+  // 但這台電腦不一定設定過；Sammi 用的是 Gmail，直接開網頁版最穩。
+  function openMail(mail) {
+    if (!mail.to) { alert(T('noEmail', 'This booking has no email address — please phone the customer instead.')); return; }
+    var u = new URLSearchParams();
+    u.set('view', 'cm');
+    u.set('fs', '1');
+    u.set('to', mail.to);
+    u.set('su', mail.subject);
+    u.set('body', mail.body);
+    window.open('https://mail.google.com/mail/?' + u.toString(), '_blank', 'noopener');
   }
 
   // 把一筆預約轉成預先填好的工單

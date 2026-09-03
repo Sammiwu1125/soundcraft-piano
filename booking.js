@@ -63,12 +63,17 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     showDateError(false);
+    // 地址在這一步就收齊，客戶不必再跑第二頁
+    var address = g('street') + (g('unit') ? ', ' + g('unit') : '') +
+      (g('city') ? ', ' + g('city') : '') + ', BC';
+
     var rows = [
       ['Name', g('name')],
       ['Phone', g('phone')],
       ['Email', g('email')],
       ['Service', g('service')],
-      ['City', g('city')],
+      ['Address', address],
+      ['Access notes', g('access')],
       ['Piano', g('pianoType')],
       ['Make / model', g('brand')],
       ['Last tuned', g('lastTuned')],
@@ -84,21 +89,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-4) +
       Math.random().toString(36).slice(2, 5).toUpperCase();
 
-    // 第二階段的專屬連結，直接放進通知信，回覆客戶時貼上即可。
-    // pt / lt 是琴種與上次調音：第二階段本身不問這兩題，但要靠它們把資料
-    // 一路帶到工單，所以在連結上原封帶過去。
+    // 改期連結。地址已經在這一步收齊，所以這條連結只在時間需要更動時才寄出，
+    // 客戶點進去只要重選日期與時段。
+    // 連結上只帶改期用得到的欄位 —— 電話、Email、地址都不放，
+    // 它們已經在資料庫裡，沒必要跟著網址到處跑。
     var params = new URLSearchParams();
     params.set('ref', ref);
     if (g('name')) params.set('n', g('name'));
-    if (g('phone')) params.set('p', g('phone'));
-    if (g('email')) params.set('e', g('email'));
     if (g('service')) params.set('s', g('service'));
-    if (g('city')) params.set('c', g('city'));
     if (g('preferredDate')) params.set('d', g('preferredDate'));
     if (g('preferred')) params.set('t', g('preferred'));
-    if (g('pianoType')) params.set('pt', g('pianoType'));
-    if (g('lastTuned')) params.set('lt', g('lastTuned'));
-    if (g('brand')) params.set('b', g('brand'));
     var confirmUrl = location.origin +
       location.pathname.replace(/[^/]*$/, '') + 'confirm.html?' + params.toString();
 
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     rows.forEach(function (r) { payload.append(r[0], r[1]); });
     if (g('notes')) payload.append('Notes', g('notes'));
     if (g('email')) payload.append('_replyto', g('email'));
-    payload.append('Address link — send this to the customer', confirmUrl);
+    payload.append('Reschedule link — send this only if the time needs to change', confirmUrl);
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
 
     // 同步一份到資料庫，服務當天工單就能直接帶入這些資料。
@@ -122,6 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
         email: g('email'),
         service: g('service'),
         city: g('city'),
+        street: g('street'),
+        unit: g('unit'),
+        address: address,
+        access_notes: g('access'),
         brand: g('brand'),
         piano_type: g('pianoType'),
         last_tuned: g('lastTuned'),

@@ -198,7 +198,10 @@ select {
 .tk-empty { padding: 44px 20px; text-align: center; color: var(--muted); font-size: 14px; }
 
 /* 預約清單是嵌在卡片裡的，不需要卡片自己那圈邊框與左右內距 */
-.tk-item--booking { padding: 13px 0; }
+.tk-bk-row { border-top: 1px solid var(--line-soft); padding: 4px 0 12px; }
+.tk-bk-row:first-child { border-top: none; }
+.tk-bk-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.tk-item--booking { padding: 13px 0 9px; border-top: none; }
 .tk-item--booking:hover { background: transparent; }
 .tk-item--booking:hover .tk-item-name { color: var(--brand); }
 
