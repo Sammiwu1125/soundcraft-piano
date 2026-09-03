@@ -62,6 +62,10 @@
   addRow('REF', ref);
   addRow('NAME', name);
   addRow('SERVICE', service);
+  // 原本約的日期與時間一定要看得到。下面的欄位可能因為日期過期而空白，
+  // 客戶若不知道自己原本約了什麼，就會隨便挑一個送出，雙方對不起來。
+  addRow('DATE', formatDate(dateRaw));
+  addRow('TIME', slot);
 
   // 城市預設帶入原本詢問時選的那個，客戶仍可改（地址可能不在同一市）
   if (cityEl && city) cityEl.value = city;
@@ -76,21 +80,45 @@
     if (dateError) dateError.style.display = on ? 'flex' : 'none';
     if (dateEl) dateEl.style.borderColor = on ? '#F2740B' : '#D5E1EC';
   }
+  // 目前選的時間跟原本預約的不一樣時提醒一句。改時間是允許的
+  // （雙方可能已經另外談好），但不能讓客戶自己改到了卻沒發現。
+  var changedBox = document.getElementById('cf-date-changed');
+  function currentSlot() {
+    var picked = form.querySelector('.slot input:checked');
+    return picked ? picked.value : '';
+  }
+  function showChanged() {
+    if (!changedBox) return;
+    var differs = (dateRaw && dateEl && dateEl.value && dateEl.value !== dateRaw) ||
+                  (slot && currentSlot() && currentSlot() !== slot);
+    changedBox.style.display = differs ? 'flex' : 'none';
+  }
+
   if (dateEl) {
     var today = new Date();
     dateEl.min = today.getFullYear() + '-' +
       String(today.getMonth() + 1).padStart(2, '0') + '-' +
       String(today.getDate()).padStart(2, '0');
-    // 連結上的日期若已經過去，就不要帶入，讓客戶自己重選
-    if (dateRaw && dateRaw >= dateEl.min) dateEl.value = dateRaw;
+    // 連結上的日期若已經過去，就不要帶入，讓客戶自己重選 ——
+    // 但一定要說明原因，否則客戶只看到一個空欄位，不會知道原本約的是哪天
+    if (dateRaw && dateRaw >= dateEl.min) {
+      dateEl.value = dateRaw;
+    } else if (dateRaw) {
+      var pastBox = document.getElementById('cf-date-past');
+      if (pastBox) pastBox.style.display = 'flex';
+    }
     dateEl.addEventListener('change', function () {
       showDateError(isSunday(dateEl.value));
+      showChanged();
     });
   }
   if (slot) {
     var match = form.querySelector('.slot input[value="' + slot.replace(/"/g, '') + '"]');
     if (match) match.checked = true;
   }
+  Array.prototype.forEach.call(form.querySelectorAll('.slot input'), function (input) {
+    input.addEventListener('change', showChanged);
+  });
 
   view.style.display = 'block';
 
@@ -125,6 +153,12 @@
     // 以表單上的值為準，不是連結上的舊值
     payload.append('Confirmed date', formatDate(g('preferredDate')));
     payload.append('Confirmed time', g('preferred'));
+    // 客戶把時間改掉時，信裡要主動講。否則要自己把兩封信擺在一起比對才看得出來，
+    // 一漏看就會照舊時間出勤。
+    if ((dateRaw && g('preferredDate') !== dateRaw) || (slot && g('preferred') !== slot)) {
+      payload.append('Changed by the customer — originally asked for',
+        [formatDate(dateRaw), slot].filter(Boolean).join(', '));
+    }
     payload.append('City', chosenCity);
     payload.append('Address', address);
     if (g('access')) payload.append('Access notes', g('access'));

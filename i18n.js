@@ -135,9 +135,17 @@
     'REF': '編號',
     'NAME': '姓名',
     'SERVICE': '服務項目',
-    'CITY': '城市',
     'DATE': '日期',
     'TIME': '時段',
+    // 摘要裡的時段值（下方的按鈕是拆成「下午」與時間兩段，這裡是完整字串）
+    'Morning (10:00 - 12:00)': '上午 10:00 – 12:00',
+    'Afternoon (2:00 - 4:00)': '下午 2:00 – 4:00',
+    'Evening (6:00 - 8:00)': '傍晚 6:00 – 8:00',
+    'The date you asked for has already passed. Please choose a new date and time.':
+      '你原本預約的日期已經過了，請重新選擇日期與時段。',
+    'This is different from the date and time shown above. If you did not mean to change it, please set it back.':
+      '這與上方顯示的預約時間不同。如果不是你想改的，請改回原本的時間。',
+    'CITY': '城市',
     'When we come': '到府時間',
     'We visit Monday to Saturday. Change this if the time no longer works.':
       '我們的到府服務為週一至週六。時間如果有變動，請直接在這裡修改。',
