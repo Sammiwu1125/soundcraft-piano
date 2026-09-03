@@ -40,6 +40,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (dateEl) dateEl.style.borderColor = on ? '#F2740B' : '#D5E1EC';
   }
 
+  // 已談定或休假的時段不再開放選擇。清單來自公開的 blocked_slots，
+  // 那張表只有日期與時段，沒有任何客戶資料。
+  function applyAvailability() {
+    if (!window.SCApplyAvailability) return;
+    window.SCApplyAvailability(form, dateEl ? dateEl.value : '', function (state) {
+      var box = document.getElementById('date-full');
+      if (box) box.style.display = state.fullyBooked ? 'flex' : 'none';
+    });
+  }
+
   if (dateEl) {
     var today = new Date();
     dateEl.min = today.getFullYear() + '-' +
@@ -47,7 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
       String(today.getDate()).padStart(2, '0');
     dateEl.addEventListener('change', function () {
       showDateError(isSunday(dateEl.value));
+      applyAvailability();
     });
+    applyAvailability();
   }
 
   form.addEventListener('submit', function (e) {

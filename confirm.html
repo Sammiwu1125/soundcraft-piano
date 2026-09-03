@@ -28,7 +28,7 @@
 .hv15:hover { color: #FFFFFF !important; }
 .hv16:hover { color: rgba(255,255,255,.7) !important; }
 </style>
-<link rel="stylesheet" href="site.css?v=10">
+<link rel="stylesheet" href="site.css?v=11">
 <meta charset="utf-8">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -113,6 +113,9 @@
 
             <!-- 原本約的日期已經過了。不講的話客戶只會看到空欄位，隨便挑一天送出。 -->
             <input id="cf-time-own" name="preferredOwn" type="text" placeholder="Or type a time that suits you better, e.g. after 5pm, or Saturday morning" style="width: 100%; box-sizing: border-box; margin-top: 10px; font-size: 16px; color: #111418; padding: 15px 16px; border: 1px solid #D5E1EC; border-radius: 5px; background: #FFFFFF">
+            <div id="date-full" style="display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 12px 14px; background: #FDF3EC; border-left: 3px solid #F2740B">
+              <span style="font-size: 14px; color: #8A4B12">That day is fully booked. Please choose another date, or write a time below and we will see what we can do.</span>
+            </div>
             <div id="cf-date-past" style="display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 12px 14px; background: #FDF3EC; border-left: 3px solid #F2740B">
               <span style="font-size: 14px; color: #8A4B12">The date you asked for has already passed. Please choose a new date and time.</span>
             </div>
@@ -199,8 +202,8 @@
 </div>
 
 <script src="ticket-config.js?v=2"></script>
-<script src="booking-sync.js?v=1"></script>
-<script src="confirm.js?v=5"></script>
-<script src="i18n.js?v=9"></script>
+<script src="booking-sync.js?v=2"></script>
+<script src="confirm.js?v=6"></script>
+<script src="i18n.js?v=10"></script>
 </body>
 </html>

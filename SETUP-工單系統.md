@@ -191,6 +191,49 @@ create policy "staff delete" on public.bookings for delete to authenticated usin
 
 ---
 
+## 步驟七：不開放的時段（談定的時段不再讓別人選）
+
+做完這步，工單系統會多一區「不開放的時段」。加進去的日期與時段，客戶在預約表單上會看到刪除線、點不下去。
+
+SQL Editor → New query → 貼下面整段 → Run。
+
+```sql
+create table public.blocked_slots (
+  id           uuid primary key default gen_random_uuid(),
+  blocked_date date not null,
+  slot         text,                       -- null 代表整天不開放
+  created_at   timestamptz default now()
+);
+
+-- 同一天同一個時段只會有一筆
+create unique index blocked_slots_unique
+  on public.blocked_slots (blocked_date, coalesce(slot, ''));
+create index blocked_slots_date_idx on public.blocked_slots (blocked_date);
+
+alter table public.blocked_slots enable row level security;
+
+-- 這張表「公開可讀」是刻意的：預約表單要靠它把已排滿的時段變成不可選。
+-- 安全性來自這張表裡本來就沒有秘密 —— 只有日期與時段，沒有任何客戶資料。
+-- 所以千萬不要為了記錄原因而加上姓名之類的欄位，那會直接公開出去。
+create policy "anyone can read" on public.blocked_slots
+  for select to anon, authenticated using (true);
+
+create policy "staff insert" on public.blocked_slots for insert to authenticated with check (true);
+create policy "staff delete" on public.blocked_slots for delete to authenticated using (true);
+```
+
+用法：
+
+- **談定一筆預約之後** → 在「來自預約表單」那筆旁邊按「Block this slot」，一鍵擋掉
+- **休假、整天排滿** → 在「不開放的時段」選日期、時段選「整天」，按 Block it
+- **要放回去** → 清單上按「Unblock」
+
+客戶那邊看到的：被封鎖的時段會變灰、加上刪除線、點不下去；整天都封鎖的話會顯示「這天已排滿，請換一天，或在下面寫下你方便的時間」。
+
+> 讀不到封鎖清單時（例如客戶網路不穩），表單會當作全部開放。寧可讓客戶送出一個要再改的時間，也不要因為連線問題讓整張表單不能用。
+
+---
+
 ## 舊資料怎麼辦
 
 舊工單還鎖在各裝置的瀏覽器裡。**在每一台填過工單的裝置上**，各自打開舊的 Netlify 那頁按一次「Export All (Excel)」，把檔案存下來。

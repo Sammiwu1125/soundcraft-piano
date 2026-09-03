@@ -94,6 +94,15 @@
     changedBox.style.display = differs ? 'flex' : 'none';
   }
 
+  // 已談定或休假的時段不再開放選擇（同預約頁）
+  function applyAvailability() {
+    if (!window.SCApplyAvailability) return;
+    window.SCApplyAvailability(form, dateEl ? dateEl.value : '', function (state) {
+      var box = document.getElementById('date-full');
+      if (box) box.style.display = state.fullyBooked ? 'flex' : 'none';
+    });
+  }
+
   if (dateEl) {
     var today = new Date();
     dateEl.min = today.getFullYear() + '-' +
@@ -110,6 +119,7 @@
     dateEl.addEventListener('change', function () {
       showDateError(isSunday(dateEl.value));
       showChanged();
+      applyAvailability();
     });
   }
   if (slot) {
@@ -119,6 +129,9 @@
   Array.prototype.forEach.call(form.querySelectorAll('.slot input'), function (input) {
     input.addEventListener('change', showChanged);
   });
+
+  // 連結上帶來的時段可能已經被封鎖，載入時就要先套用一次
+  applyAvailability();
 
   // 三個時段裡的第一個帶著 required，用來強制至少選一個。
   // 但客戶如果自己寫了時間，就不該再被擋住 —— 兩者擇一即可。

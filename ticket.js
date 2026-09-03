@@ -58,6 +58,12 @@
     bkAccess: '進出說明', bkEmail: '電子郵件', bkAwaitingAddress: '尚未填地址',
     // 寄給客戶的動作
     sendConfirm: '寄確認信', sendReschedule: '寄改期連結',
+    // 封鎖時段
+    blockedTitle: '不開放的時段',
+    blockedHint: '客戶在預約表單上選不到這些時段。跟人談定之後把時段加進來，或整天封起來。',
+    blockAdd: '封鎖', blockWholeDay: '整天', blockNone: '目前沒有封鎖任何時段。',
+    blockRemove: '解除', blockNeedDate: '請先選日期。',
+    blockThis: '封鎖此時段', blockFailed: '封鎖失敗：',
     noEmail: '這筆預約沒有留電子郵件，請直接打電話給客戶。',
     copied: '已複製到剪貼簿，貼進信件即可。',
     copyFailed: '複製失敗，請手動選取內文複製。'
@@ -183,7 +189,7 @@
       $('form-title').textContent = editing ? T('editTicket', 'Edit ticket') : T('newTicket', 'New ticket');
       renderBookingInfo(formBooking);
     }
-    if (currentView === 'list') { renderList(lastList, lastOffline); renderBookings(lastBookings); }
+    if (currentView === 'list') { renderList(lastList, lastOffline); renderBookings(lastBookings); renderBlocked(lastBlocked); }
   }
 
   ['en', 'zh'].forEach(function (code) {
@@ -354,16 +360,29 @@
       // 巢狀的按鈕點下去會連帶觸發外層
       var actions = document.createElement('div');
       actions.className = 'tk-bk-actions';
-      [[T('sendConfirm', 'Send confirmation'), 'tk-btn--ghost', confirmEmail],
-       [T('sendReschedule', 'Send reschedule link'), 'tk-btn--ghost', rescheduleEmail]
+      [[T('sendConfirm', 'Send confirmation'), confirmEmail],
+       [T('sendReschedule', 'Send reschedule link'), rescheduleEmail]
       ].forEach(function (a) {
         var el = document.createElement('button');
         el.type = 'button';
-        el.className = 'tk-btn ' + a[1] + ' tk-btn--sm';
+        el.className = 'tk-btn tk-btn--ghost tk-btn--sm';
         el.textContent = a[0];
-        el.addEventListener('click', function () { openMail(a[2](b)); });
+        el.addEventListener('click', function () { openMail(a[1](b)); });
         actions.appendChild(el);
       });
+
+      // 談定之後一鍵把這個時段擋掉，不必再回頭手動輸入日期
+      if (b.preferred_date && b.preferred_time) {
+        var block = document.createElement('button');
+        block.type = 'button';
+        block.className = 'tk-btn tk-btn--ghost tk-btn--sm';
+        block.textContent = T('blockThis', 'Block this slot');
+        block.addEventListener('click', function () {
+          block.disabled = true;
+          blockSlot(b.preferred_date, b.preferred_time).then(function () { block.disabled = false; });
+        });
+        actions.appendChild(block);
+      }
 
       var wrap = document.createElement('div');
       wrap.className = 'tk-bk-row';
@@ -372,6 +391,74 @@
       box.appendChild(wrap);
     });
   }
+
+  // ── 封鎖時段 ──
+  // 這裡加進去的時段，客戶在預約表單上就選不到了。
+  var SLOTS = [
+    { key: '', en: 'Whole day', zh: '整天' },
+    { key: 'Morning (10:00 - 12:00)', en: 'Morning (10:00 - 12:00)', zh: '上午 10:00 – 12:00' },
+    { key: 'Afternoon (2:00 - 4:00)', en: 'Afternoon (2:00 - 4:00)', zh: '下午 2:00 – 4:00' },
+    { key: 'Evening (6:00 - 8:00)', en: 'Evening (6:00 - 8:00)', zh: '傍晚 6:00 – 8:00' }
+  ];
+
+  var lastBlocked = [];
+
+  function loadBlocked() {
+    return S.listBlocked().then(function (items) {
+      lastBlocked = items;
+      renderBlocked(items);
+    });
+  }
+
+  function renderBlocked(items) {
+    fillSelect($('blk-slot'), SLOTS, $('blk-slot').value);
+    var box = $('blocked-list');
+    box.innerHTML = '';
+    if (!items.length) {
+      var empty = document.createElement('div');
+      empty.style.cssText = 'padding: 16px 0 2px; color: var(--muted); font-size: 14px';
+      empty.textContent = T('blockNone', 'Nothing is blocked at the moment.');
+      box.appendChild(empty);
+      return;
+    }
+    items.forEach(function (b) {
+      var row = document.createElement('div');
+      row.className = 'tk-block-row';
+
+      var label = document.createElement('span');
+      var slotName = SLOTS.filter(function (s) { return s.key === (b.slot || ''); })[0];
+      label.textContent = prettyDate(b.blocked_date) + '  ·  ' +
+        (slotName ? L(slotName) : b.slot);
+
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'tk-btn tk-btn--ghost tk-btn--sm';
+      del.textContent = T('blockRemove', 'Unblock');
+      del.addEventListener('click', function () {
+        del.disabled = true;
+        S.removeBlocked(b.id).then(loadBlocked, function (err) {
+          del.disabled = false;
+          note($('blk-error'), true, T('blockFailed', 'Could not block: ') + (err.message || err));
+        });
+      });
+
+      row.appendChild(label);
+      row.appendChild(del);
+      box.appendChild(row);
+    });
+  }
+
+  function blockSlot(date, slot) {
+    note($('blk-error'), false);
+    if (!date) { note($('blk-error'), true, T('blockNeedDate', 'Pick a date first.')); return Promise.resolve(); }
+    return S.addBlocked(date, slot).then(loadBlocked, function (err) {
+      note($('blk-error'), true, T('blockFailed', 'Could not block: ') + (err.message || err));
+    });
+  }
+
+  $('blk-add').addEventListener('click', function () {
+    blockSlot($('blk-date').value, $('blk-slot').value);
+  });
 
   // ── 寄信給客戶 ──
   // 網站是純靜態的，沒有寄信的能力，所以這裡不「代寄」，而是把信寫好、
@@ -1064,9 +1151,10 @@
         openForm(t, false);
       });
     } else {
-      show('list');
+      show("list");
       loadList();
       loadBookings();
+      loadBlocked();
     }
     updatePending();
   }

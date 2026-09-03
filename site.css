@@ -196,3 +196,12 @@ html[lang="zh-Hant"] [style*="IBM Plex Mono"] {
 .slot input:checked + .slot-box .slot-time { color: #0B5FB4; }
 .slot input:focus-visible + .slot-box { outline: 2px solid #0B5FB4; outline-offset: 2px; }
 @media (max-width: 560px) { .slot { flex: 1 1 100%; } }
+
+/* 已排滿或休假的時段。用刪除線 + 灰階，一眼看得出不是可以選的東西，
+   不能只靠淡化 —— 淡化在陽光下的手機螢幕上幾乎看不出來。 */
+.slot--off .slot-box {
+  background: #F4F6F8; border-color: #E3E8ED; cursor: not-allowed;
+}
+.slot--off .slot-name { color: #A6AFB9; text-decoration: line-through; }
+.slot--off .slot-time { color: #B8C0C9; text-decoration: line-through; }
+.slot--off:hover .slot-box { border-color: #E3E8ED; }

@@ -339,6 +339,34 @@
     }, function () { return []; });
   }
 
+  // ── 封鎖時段 ────────────────────────────────────────────────
+  // 這張表是公開可讀的（預約表單要靠它把已排滿的時段變成不可選），
+  // 所以裡面只能有日期與時段，絕對不要加客戶姓名之類的欄位。
+  // slot 為 null 代表整天不開放。
+  function listBlocked() {
+    if (!isConfigured() || !session || !navigator.onLine) return Promise.resolve([]);
+    var today = new Date();
+    var from = today.getFullYear() + '-' +
+      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+      String(today.getDate()).padStart(2, '0');
+    return authed('/rest/v1/blocked_slots?select=*&blocked_date=gte.' + from +
+      '&order=blocked_date.asc&limit=500').then(function (rows) {
+      return rows || [];
+    }, function () { return []; });
+  }
+
+  function addBlocked(date, slot) {
+    return authed('/rest/v1/blocked_slots', {
+      method: 'POST',
+      headers: { 'Prefer': 'return=representation,resolution=ignore-duplicates' },
+      body: [{ blocked_date: date, slot: slot || null }]
+    });
+  }
+
+  function removeBlocked(id) {
+    return authed('/rest/v1/blocked_slots?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
+  }
+
   // RFC4122 v4。crypto.randomUUID 在舊 Safari 沒有，備援用 getRandomValues。
   function uuid() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -360,6 +388,9 @@
     get: get,
     remove: remove,
     pendingBookings: pendingBookings,
+    listBlocked: listBlocked,
+    addBlocked: addBlocked,
+    removeBlocked: removeBlocked,
     flush: flush,
     queueCount: queueCount,
     uuid: uuid

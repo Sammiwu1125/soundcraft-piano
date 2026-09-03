@@ -171,6 +171,19 @@ select {
 .tk-sig.signed .tk-sig-ph { display: none; }
 
 /* ── 工單清單 ── */
+/* ── 封鎖時段 ── */
+.tk-block-add { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tk-block-add input[type=date] { flex: 0 1 170px; }
+.tk-block-add select { flex: 1 1 190px; }
+.tk-block-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 0; border-top: 1px solid var(--line-soft); font-size: 14.5px;
+}
+.tk-block-row:first-child { margin-top: 6px; }
+@media (max-width: 640px) {
+  .tk-block-add input[type=date], .tk-block-add select, .tk-block-add .tk-btn { flex: 1 1 100%; }
+}
+
 .tk-search { display: flex; gap: 10px; margin-top: 20px; }
 .tk-search input { flex: 1; }
 

@@ -7,7 +7,7 @@
 <title>Service Tickets — Soundcraft Piano Service</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="ticket.css?v=1">
+<link rel="stylesheet" href="ticket.css?v=2">
 </head>
 <body class="tk">
 
@@ -80,6 +80,23 @@
         <h2 data-t="bookingsTitle">From the booking form</h2>
         <p class="tk-hint" data-t="bookingsHint">Bookings that don’t have a ticket yet. Tap one to start a ticket with the client’s details already filled in.</p>
         <div id="bookings"></div>
+      </div>
+    </section>
+
+    <!-- 已封鎖的時段：客戶在預約表單上就選不到 -->
+    <section id="blocked-wrap">
+      <div class="tk-card" style="padding: 20px 22px">
+        <h2 data-t="blockedTitle">Times not available</h2>
+        <p class="tk-hint" data-t="blockedHint">Customers cannot pick these on the booking form. Add a slot once you have agreed it with someone, or block a whole day off.</p>
+
+        <div class="tk-block-add">
+          <input id="blk-date" type="date" aria-label="Date to block">
+          <select id="blk-slot" aria-label="Slot to block"></select>
+          <button id="blk-add" type="button" class="tk-btn tk-btn--sm" data-t="blockAdd">Block it</button>
+        </div>
+        <div id="blk-error" class="tk-note tk-note--err"></div>
+
+        <div id="blocked-list"></div>
       </div>
     </section>
 
@@ -261,8 +278,8 @@
 <!-- 列印用的收據，畫面上永遠看不到，只有列印時才出現 -->
 <div class="tk-receipt" id="receipt"></div>
 
-<script src="ticket-config.js?v=1"></script>
-<script src="ticket-store.js?v=1"></script>
-<script src="ticket.js?v=1"></script>
+<script src="ticket-config.js?v=2"></script>
+<script src="ticket-store.js?v=2"></script>
+<script src="ticket.js?v=2"></script>
 </body>
 </html>

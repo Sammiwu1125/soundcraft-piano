@@ -221,6 +221,9 @@
     'Morning': '上午',
     'Afternoon': '下午',
     'Evening': '傍晚',
+    'Times not available': '不開放的時段',
+    'That day is fully booked. Please choose another date, or write a time below and we will see what we can do.':
+      '這一天已經排滿了。請換一天，或在下面寫下你方便的時間，我們再想辦法。',
     'We visit Monday to Saturday. Pick a date, then a time slot or write your own below.':
       '我們的到府服務為週一至週六。請先選日期，時段可以按下方按鈕或自己填寫。',
     'Sundays are not available. Please choose another day.':
