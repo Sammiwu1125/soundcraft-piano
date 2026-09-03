@@ -49,7 +49,13 @@
     confirmLeave: '這張工單還沒儲存，確定要離開嗎？',
     unsynced: '待同步', loading: '載入中…', signingIn: '登入中…', saving: '儲存中…',
     receiptTitle: '服務收據', receiptThanks: '感謝您選擇 Soundcraft Piano Service。',
-    servicedBy: '技師', signature: '簽名'
+    servicedBy: '技師', signature: '簽名',
+    // 預約帶入
+    bookingsTitle: '來自預約表單',
+    bookingsHint: '這些預約還沒開過工單。點一下就會用客戶填的資料開一張新工單。',
+    fromBooking: '預約時客戶填的',
+    bkService: '服務項目', bkPreferred: '希望時段', bkNotes: '客戶備註',
+    bkAccess: '進出說明', bkEmail: '電子郵件', bkAwaitingAddress: '尚未確認地址'
   };
 
   var lang = 'en';
@@ -81,18 +87,22 @@
     { key: 'Photo: interior', en: 'Photo: interior', zh: '拍照：內部' },
     { key: 'Confirmed with client', en: 'Confirmed with client', zh: '已與客戶確認' }
   ];
+  // 琴種與上次調音的選項，key 一律沿用 booking.html 的值。
+  // 兩邊講法必須一模一樣，預約資料才帶得進工單，統計時也才是同一個東西。
+  // 改這裡的時候記得同步改 booking.html。
   var PIANO_TYPES = [
-    { key: '', en: '—', zh: '—' },
-    { key: 'upright', en: 'Upright', zh: '直立式' },
-    { key: 'grand', en: 'Grand', zh: '平台式' }
+    { key: '', en: 'Not sure', zh: '不確定' },
+    { key: 'Upright', en: 'Upright', zh: '直立式' },
+    { key: 'Grand', en: 'Grand', zh: '平台式' },
+    { key: 'Baby grand', en: 'Baby grand', zh: '小型平台式' },
+    { key: 'Digital piano', en: 'Digital piano', zh: '電鋼琴' }
   ];
   var LAST_TUNED = [
-    { key: '', en: '—', zh: '—' },
-    { key: '6-12m', en: '6 months – 1 year', zh: '6 個月到 1 年' },
-    { key: '1-2y', en: '1–2 years', zh: '1–2 年' },
-    { key: '2-3y', en: '2–3 years', zh: '2–3 年' },
-    { key: '5y+', en: '5+ years', zh: '5 年以上' },
-    { key: 'unknown', en: 'Not sure', zh: '不確定' }
+    { key: '', en: 'Not sure', zh: '不確定' },
+    { key: 'Within the last year', en: 'Within the last year', zh: '一年內' },
+    { key: '1 – 3 years ago', en: '1 – 3 years ago', zh: '1–3 年前' },
+    { key: 'More than 3 years ago', en: 'More than 3 years ago', zh: '超過 3 年' },
+    { key: 'Never, or unknown', en: 'Never, or unknown', zh: '從未調過或不清楚' }
   ];
   var PAYMENTS = [
     { key: '', en: '—', zh: '—' },
@@ -166,8 +176,9 @@
       fill(t);
       // applyLang 會把標題一律寫成「新增工單」，編輯中的要改回來
       $('form-title').textContent = editing ? T('editTicket', 'Edit ticket') : T('newTicket', 'New ticket');
+      renderBookingInfo(formBooking);
     }
-    if (currentView === 'list') renderList(lastList, lastOffline);
+    if (currentView === 'list') { renderList(lastList, lastOffline); renderBookings(lastBookings); }
   }
 
   ['en', 'zh'].forEach(function (code) {
@@ -288,6 +299,101 @@
     });
   }
 
+  // ── 待服務的預約 ──
+  // 客戶從預約表單送出的資料。開過工單的就不再出現。
+  var lastBookings = [];
+
+  function loadBookings() {
+    return S.pendingBookings().then(function (items) {
+      lastBookings = items;
+      renderBookings(items);
+    });
+  }
+
+  function renderBookings(items) {
+    $('bookings-wrap').style.display = items.length ? 'block' : 'none';
+    var box = $('bookings');
+    box.innerHTML = '';
+    items.forEach(function (b) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tk-item tk-item--booking';
+
+      var name = document.createElement('div');
+      name.className = 'tk-item-name';
+      // 客戶輸入，一律 textContent
+      name.textContent = b.name || '—';
+      if (!b.address) {
+        var flag = document.createElement('span');
+        flag.className = 'tk-item-flag';
+        flag.textContent = T('bkAwaitingAddress', 'NO ADDRESS YET');
+        name.appendChild(flag);
+      }
+
+      var meta = document.createElement('div');
+      meta.className = 'tk-item-meta';
+      meta.textContent = [prettyDate(b.preferred_date), b.service, b.phone, b.address || b.city]
+        .filter(Boolean).join('  ·  ');
+
+      var ref = document.createElement('div');
+      ref.className = 'tk-item-amt';
+      ref.style.cssText = 'font-family: var(--mono); font-size: 12px; color: var(--muted); font-weight: 400';
+      ref.textContent = b.ref || '';
+
+      btn.appendChild(name);
+      btn.appendChild(ref);
+      btn.appendChild(meta);
+      btn.addEventListener('click', function () { go('#/from/' + encodeURIComponent(b.ref)); });
+      box.appendChild(btn);
+    });
+  }
+
+  // 把一筆預約轉成預先填好的工單
+  function ticketFromBooking(b) {
+    var t = blankTicket();
+    t.bookingRef = b.ref || '';
+    t.ticketNo = b.ref || '';
+    t.clientName = b.name || '';
+    t.clientPhone = b.phone || '';
+    t.address = b.address || (b.city ? b.city + ', BC' : '');
+    t.brand = b.brand || '';
+    t.pianoType = b.piano_type || '';
+    t.lastTuned = b.last_tuned || '';
+    if (b.preferred_date) t.serviceDate = b.preferred_date;
+
+    // 客戶自己寫的話與進出說明要留在工單上，不能只顯示在畫面上 ——
+    // 存檔之後技師到現場還要看得到
+    var lines = [];
+    if (b.notes) lines.push('[' + T('bkNotes', 'Booking notes') + '] ' + b.notes);
+    if (b.access_notes) lines.push('[' + T('bkAccess', 'Access') + '] ' + b.access_notes);
+    t.conditionNotes = lines.join('\n');
+    return t;
+  }
+
+  function renderBookingInfo(b) {
+    var wrap = $('booking-info');
+    var rows = $('booking-info-rows');
+    rows.innerHTML = '';
+    if (!b) { wrap.style.display = 'none'; return; }
+
+    [[T('bkService', 'Service'), b.service],
+     [T('bkPreferred', 'Preferred'), [prettyDate(b.preferred_date), b.preferred_time].filter(Boolean).join(', ')],
+     [T('bkEmail', 'Email'), b.email]].forEach(function (r) {
+      if (!r[1]) return;
+      var line = document.createElement('div');
+      line.style.cssText = 'display: flex; gap: 14px; padding: 3px 0; font-size: 14.5px';
+      var k = document.createElement('span');
+      k.style.cssText = "flex: 0 0 110px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted); padding-top: 3px";
+      k.textContent = r[0];
+      var v = document.createElement('span');
+      v.textContent = r[1];
+      line.appendChild(k);
+      line.appendChild(v);
+      rows.appendChild(line);
+    });
+    wrap.style.display = rows.children.length ? 'block' : 'none';
+  }
+
   $('q-btn').addEventListener('click', loadList);
   $('q').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') { e.preventDefault(); loadList(); }
@@ -324,7 +430,9 @@
   // ══════════════════════════════════════════════════════════
   // 表單
   // ══════════════════════════════════════════════════════════
-  var editing = null;    // 正在編輯的工單 id，新單為 null
+  var editing = null;          // 正在編輯的工單 id，新單為 null
+  var formBookingRef = null;   // 這張工單來自哪一筆預約，用來把該預約從待辦清單移除
+  var formBooking = null;      // 該筆預約的原始內容，只用來顯示「預約時客戶填的」那一區
   var dirty = false;
 
   function markDirty() { dirty = true; }
@@ -339,6 +447,15 @@
       opt.textContent = L(o);
       el.appendChild(opt);
     });
+    // 選項改過版之後，舊工單可能存著現在清單裡沒有的值（例如早期的
+    // 'upright'）。直接設 value 會靜靜地變成空白，把舊資料吃掉，
+    // 所以先把它補成一個選項再選中。
+    if (value && !options.some(function (o) { return o.key === value; })) {
+      var legacy = document.createElement('option');
+      legacy.value = value;
+      legacy.textContent = value;
+      el.appendChild(legacy);
+    }
     el.value = value || '';
   }
 
@@ -440,9 +557,12 @@
      'conditionNotes', 'warrantyDays', 'nextTuning'].forEach(function (k) {
       $('f-' + k).value = t[k] == null ? '' : t[k];
     });
-    $('f-pianoType').value = t.pianoType || '';
-    $('f-lastTuned').value = t.lastTuned || '';
-    $('f-paymentMethod').value = t.paymentMethod || '';
+    // 一定要走 fillSelect，不能直接指定 .value ——
+    // 直接指定時，若舊工單存的值已經不在選項清單裡（例如改版前的 'upright'），
+    // 瀏覽器會安靜地把它變成空白，等於把資料吃掉。
+    fillSelect($('f-pianoType'), PIANO_TYPES, t.pianoType);
+    fillSelect($('f-lastTuned'), LAST_TUNED, t.lastTuned);
+    fillSelect($('f-paymentMethod'), PAYMENTS, t.paymentMethod);
 
     function tick(box, chosen) {
       Array.prototype.forEach.call(box.querySelectorAll('input'), function (input) {
@@ -486,6 +606,7 @@
 
     t.total = recalc();
     t.signature = sigData;
+    t.bookingRef = formBookingRef || null;
     return t;
   }
 
@@ -737,16 +858,32 @@
     else location.hash = hash;
   }
 
-  function openForm(ticket, isNew) {
+  function openForm(ticket, isNew, booking) {
     editing = isNew ? null : ticket.id;
+    formBookingRef = ticket.bookingRef || null;
+    formBooking = booking || null;
     show('form');
     clearNotes();
     renderFormChrome();
     fill(ticket);
+    renderBookingInfo(formBooking);
     sizeCanvas();
     dirty = false;
     $('delete-btn').style.display = isNew ? 'none' : 'inline-flex';
     $('form-title').textContent = isNew ? T('newTicket', 'New ticket') : T('editTicket', 'Edit ticket');
+  }
+
+  // 從待辦清單點進來的預約。重新整理後 lastBookings 會是空的，要能自己補抓。
+  function openFromBooking(ref) {
+    var found = lastBookings.filter(function (b) { return b.ref === ref; })[0];
+    if (found) { openForm(ticketFromBooking(found), true, found); return; }
+    show('form');
+    S.pendingBookings().then(function (items) {
+      lastBookings = items;
+      var b = items.filter(function (x) { return x.ref === ref; })[0];
+      if (!b) { go('#/list'); return; }
+      openForm(ticketFromBooking(b), true, b);
+    });
   }
 
   function route() {
@@ -754,19 +891,23 @@
     if (!S.currentUser()) { show('login'); return; }
 
     var hash = location.hash || '#/list';
-    var match = /^#\/t\/(.+)$/.exec(hash);
+    var ticketMatch = /^#\/t\/(.+)$/.exec(hash);
+    var bookingMatch = /^#\/from\/(.+)$/.exec(hash);
 
     if (hash === '#/new') {
       openForm(blankTicket(), true);
-    } else if (match) {
+    } else if (bookingMatch) {
+      openFromBooking(decodeURIComponent(bookingMatch[1]));
+    } else if (ticketMatch) {
       show('form');
-      S.get(match[1]).then(function (t) {
+      S.get(ticketMatch[1]).then(function (t) {
         if (!t) { go('#/list'); return; }
         openForm(t, false);
       });
     } else {
       show('list');
       loadList();
+      loadBookings();
     }
     updatePending();
   }

@@ -130,6 +130,29 @@
     if (g('access')) payload.append('Access notes', g('access'));
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
 
+    // 同步第二階段的結果。這一筆帶著確認後的地址與雙方談定的時間，
+    // 工單系統會把同一個 ref 的兩筆合併起來看。
+    if (window.SCBookingSync) {
+      window.SCBookingSync({
+        ref: ref,
+        stage: 'confirmed',
+        name: name,
+        phone: get('p'),
+        email: get('e'),
+        service: service,
+        city: chosenCity,
+        brand: get('b'),
+        piano_type: get('pt'),
+        last_tuned: get('lt'),
+        preferred_date: g('preferredDate'),
+        preferred_time: g('preferred'),
+        street: g('street'),
+        unit: g('unit'),
+        address: address,
+        access_notes: g('access')
+      });
+    }
+
     errorBox.style.display = 'none';
     btn.disabled = true;
     btn.style.opacity = '.6';

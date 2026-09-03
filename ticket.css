@@ -197,6 +197,11 @@ select {
 }
 .tk-empty { padding: 44px 20px; text-align: center; color: var(--muted); font-size: 14px; }
 
+/* 預約清單是嵌在卡片裡的，不需要卡片自己那圈邊框與左右內距 */
+.tk-item--booking { padding: 13px 0; }
+.tk-item--booking:hover { background: transparent; }
+.tk-item--booking:hover .tk-item-name { color: var(--brand); }
+
 /* ── 收據列印：只印收據那張，其餘全部藏起來 ── */
 .tk-receipt { display: none; }
 @media print {

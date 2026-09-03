@@ -133,6 +133,64 @@ window.SC_CONFIG = {
 
 ---
 
+## 步驟六：接上預約表單（讓工單自動帶入客戶資料）
+
+做完這步，客戶從網站送出預約後，工單頁的清單上方會出現「來自預約表單」，
+點一下就開一張已經填好姓名、電話、地址、琴種、日期的工單。
+
+SQL Editor → New query → 貼下面整段 → Run。
+
+```sql
+create table public.bookings (
+  id             uuid primary key default gen_random_uuid(),
+  ref            text,                       -- 預約編號 SC-XXXX，兩個階段共用
+  stage          text,                       -- 'enquiry' 第一階段 / 'confirmed' 確認地址
+  name           text,
+  phone          text,
+  email          text,
+  service        text,
+  city           text,
+  brand          text,
+  piano_type     text,
+  last_tuned     text,
+  preferred_date date,
+  preferred_time text,
+  notes          text,
+  street         text,
+  unit           text,
+  address        text,
+  access_notes   text,
+  created_at     timestamptz default now()
+);
+
+create index bookings_ref_idx        on public.bookings (ref);
+create index bookings_created_at_idx on public.bookings (created_at desc);
+
+-- 工單記住自己來自哪一筆預約，帶過的預約就不會再出現在待辦清單上
+alter table public.tickets add column if not exists booking_ref text;
+create index if not exists tickets_booking_ref_idx on public.tickets (booking_ref);
+
+alter table public.bookings enable row level security;
+
+-- 關鍵：預約頁是公開的，所以未登入者「只能寫、不能讀」。
+-- 任何人都可以送出預約（跟現在的 Formspree 一樣），
+-- 但沒有登入就一筆都讀不到，客戶名單不會外流。
+create policy "public can submit" on public.bookings
+  for insert to anon, authenticated with check (true);
+
+create policy "staff read"   on public.bookings for select to authenticated using (true);
+create policy "staff update" on public.bookings for update to authenticated using (true) with check (true);
+create policy "staff delete" on public.bookings for delete to authenticated using (true);
+```
+
+> **注意**：`public can submit` 只給 `insert`，**絕對不要**為 `anon` 加上 `select` 規則。
+> 加了的話，任何人都能把你所有客戶的姓名、電話、住家地址抓走。
+
+如果被機器人灌了垃圾資料，到 Supabase 後台 Table Editor → bookings 直接刪掉即可。
+預約通知信仍然由 Formspree 寄送，資料庫這邊只是副本，就算寫入失敗也不影響客戶預約成功。
+
+---
+
 ## 舊資料怎麼辦
 
 舊工單還鎖在各裝置的瀏覽器裡。**在每一台填過工單的裝置上**，各自打開舊的 Netlify 那頁按一次「Export All (Excel)」，把檔案存下來。
@@ -159,3 +217,4 @@ window.SC_CONFIG = {
 | `ticket-store.js` | 資料層：登入、讀寫 Supabase、離線暫存 |
 | `ticket-config.js` | 連線設定（步驟四要改的就是這個） |
 | `ticket.css` | 樣式 |
+| `booking-sync.js` | 預約表單把資料同步進資料庫（booking.html / confirm.html 用）|

@@ -74,6 +74,15 @@
       <button id="new-btn" type="button" class="tk-btn" data-t="newTicket">New ticket</button>
     </div>
 
+    <!-- 已預約但還沒開工單的客戶。沒有的話整區不顯示。 -->
+    <section id="bookings-wrap" style="display: none">
+      <div class="tk-card" style="padding: 20px 22px">
+        <h2 data-t="bookingsTitle">From the booking form</h2>
+        <p class="tk-hint" data-t="bookingsHint">Bookings that don’t have a ticket yet. Tap one to start a ticket with the client’s details already filled in.</p>
+        <div id="bookings"></div>
+      </div>
+    </section>
+
     <div class="tk-search">
       <input id="q" type="text" data-t-ph="searchPh" placeholder="Search name, phone, ticket no, address">
       <button id="q-btn" type="button" class="tk-btn tk-btn--ghost" data-t="search">Search</button>
@@ -97,6 +106,12 @@
         <h1 id="form-title" style="margin: 0; font-family: Poppins, 'Noto Sans TC', sans-serif; font-size: 27px; font-weight: 600"
             data-t="newTicket">New ticket</h1>
         <button id="back-btn" type="button" class="tk-btn tk-btn--ghost tk-btn--sm" data-t="backToList">← All tickets</button>
+      </div>
+
+      <!-- 從預約帶入時，把客戶自己寫的話原樣附在這裡，不要混進琴況備註 -->
+      <div id="booking-info" class="tk-card" style="display: none; background: #F2F7FC; border-color: #BBD5EE">
+        <h2 data-t="fromBooking">From the booking</h2>
+        <div id="booking-info-rows"></div>
       </div>
 
       <!-- 客戶與鋼琴 -->

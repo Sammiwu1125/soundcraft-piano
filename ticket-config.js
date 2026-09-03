@@ -1,4 +1,5 @@
-// 工單系統的連線設定。
+// Supabase 連線設定。工單頁（ticket.html）與兩個預約頁
+// （booking.html / confirm.html）共用這一份。
 // 兩個值都在 Supabase 後台：Project Settings → API / API Keys。
 //
 // publishable key（舊版叫 anon key）是「公開金鑰」，本來就設計成可以放在

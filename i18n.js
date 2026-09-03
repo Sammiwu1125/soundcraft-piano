@@ -192,6 +192,7 @@
 
     'About the piano': '關於這台琴',
     'OPTIONAL': '選填',
+    'Make and model': '品牌與型號',
     'Upright or grand': '直立琴或平台琴',
     'Not sure': '不確定',
     'Upright': '直立琴',
@@ -227,9 +228,10 @@
 
   // 表單提示文字（placeholder 不是文字節點，要另外處理）
   var ZH_PLACEHOLDER = {
+    'Usually on the fallboard, e.g. Yamaha U1': '通常印在琴鍵上方的蓋板上，例如 Yamaha U1',
     'First and last name': '你的姓名',
-    'Make and model if you know it, sticking keys, buzzing notes, recent moves, stairs at the entrance.':
-      '知道的話請寫下品牌與型號，以及琴鍵卡住、雜音、最近搬過家、門口有樓梯等狀況。',
+    'Sticking keys, buzzing notes, recent moves, stairs at the entrance.':
+      '琴鍵卡住、雜音、最近搬過家、門口有樓梯等狀況。',
     // 確認頁
     '1234 Main Street': '例：1234 Main Street',
     'Optional': '選填',

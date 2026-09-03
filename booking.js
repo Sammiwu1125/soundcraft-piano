@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ['Service', g('service')],
       ['City', g('city')],
       ['Piano', g('pianoType')],
+      ['Make / model', g('brand')],
       ['Last tuned', g('lastTuned')],
       ['Preferred date', formatDate(g('preferredDate'))],
       ['Preferred time', g('preferred')]
@@ -83,7 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-4) +
       Math.random().toString(36).slice(2, 5).toUpperCase();
 
-    // 第二階段的專屬連結，直接放進通知信，回覆客戶時貼上即可
+    // 第二階段的專屬連結，直接放進通知信，回覆客戶時貼上即可。
+    // pt / lt 是琴種與上次調音：第二階段本身不問這兩題，但要靠它們把資料
+    // 一路帶到工單，所以在連結上原封帶過去。
     var params = new URLSearchParams();
     params.set('ref', ref);
     if (g('name')) params.set('n', g('name'));
@@ -93,6 +96,9 @@ document.addEventListener('DOMContentLoaded', function () {
     if (g('city')) params.set('c', g('city'));
     if (g('preferredDate')) params.set('d', g('preferredDate'));
     if (g('preferred')) params.set('t', g('preferred'));
+    if (g('pianoType')) params.set('pt', g('pianoType'));
+    if (g('lastTuned')) params.set('lt', g('lastTuned'));
+    if (g('brand')) params.set('b', g('brand'));
     var confirmUrl = location.origin +
       location.pathname.replace(/[^/]*$/, '') + 'confirm.html?' + params.toString();
 
@@ -104,6 +110,26 @@ document.addEventListener('DOMContentLoaded', function () {
     if (g('email')) payload.append('_replyto', g('email'));
     payload.append('Address link — send this to the customer', confirmUrl);
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
+
+    // 同步一份到資料庫，服務當天工單就能直接帶入這些資料。
+    // 不接 then / 不擋送出：這只是附加動作，成敗由下面的 Formspree 決定。
+    if (window.SCBookingSync) {
+      window.SCBookingSync({
+        ref: ref,
+        stage: 'enquiry',
+        name: g('name'),
+        phone: g('phone'),
+        email: g('email'),
+        service: g('service'),
+        city: g('city'),
+        brand: g('brand'),
+        piano_type: g('pianoType'),
+        last_tuned: g('lastTuned'),
+        preferred_date: g('preferredDate'),
+        preferred_time: g('preferred'),
+        notes: g('notes')
+      });
+    }
 
     sendError.style.display = 'none';
     sendBtn.disabled = true;

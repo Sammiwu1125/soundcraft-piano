@@ -124,6 +124,7 @@
     ['warranty_days', 'warrantyDays'],
     ['next_tuning', 'nextTuning'],
     ['signature', 'signature'],
+    ['booking_ref', 'bookingRef'],
     ['updated_at', 'updatedAt'],
     ['created_at', 'createdAt']
   ];
@@ -135,6 +136,9 @@
       var v = t[f[1]];
       // 空字串送進 date 欄位會被 Postgres 拒絕，要送 null
       if (v === '' && (f[0] === 'service_date' || f[0] === 'next_tuning')) v = null;
+      // booking_ref 是後來才加的欄位，而且只會被設定、不會被清空。
+      // 空值就整個不送，資料庫還沒加這一欄時，一般工單仍然存得起來。
+      if (f[0] === 'booking_ref' && !v) return;
       if (v !== undefined) row[f[0]] = v;
     });
     row.updated_at = new Date().toISOString();
@@ -301,6 +305,40 @@
     return authed('/rest/v1/tickets?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
   }
 
+  // ── 預約 ────────────────────────────────────────────────────
+  // 同一組預約在資料庫裡是兩筆：客戶送出詢問時一筆，確認地址時再一筆。
+  // 這裡以 ref 分組合併成一筆，後來的非空值蓋掉先前的，
+  // 所以拿到的是「目前為止知道的全部」——第一階段的琴種備註加上第二階段的地址。
+  function mergeByRef(rows) {
+    var byRef = {};
+    var order = [];
+    // 由舊到新處理，新的資訊才能蓋過舊的
+    rows.slice().sort(function (a, b) {
+      return (a.created_at || '') < (b.created_at || '') ? -1 : 1;
+    }).forEach(function (r) {
+      if (!r.ref) return;
+      if (!byRef[r.ref]) { byRef[r.ref] = {}; order.push(r.ref); }
+      var target = byRef[r.ref];
+      Object.keys(r).forEach(function (k) {
+        if (r[k] !== null && r[k] !== '') target[k] = r[k];
+      });
+    });
+    return order.map(function (ref) { return byRef[ref]; }).reverse();
+  }
+
+  // 還沒開過工單的預約。開過的就不該再出現在待辦清單上。
+  function pendingBookings() {
+    if (!isConfigured() || !session || !navigator.onLine) return Promise.resolve([]);
+    return Promise.all([
+      authed('/rest/v1/bookings?select=*&order=created_at.desc&limit=300'),
+      authed('/rest/v1/tickets?select=booking_ref&booking_ref=not.is.null&limit=1000')
+    ]).then(function (res) {
+      var used = {};
+      (res[1] || []).forEach(function (t) { if (t.booking_ref) used[t.booking_ref] = true; });
+      return mergeByRef(res[0] || []).filter(function (b) { return !used[b.ref]; });
+    }, function () { return []; });
+  }
+
   // RFC4122 v4。crypto.randomUUID 在舊 Safari 沒有，備援用 getRandomValues。
   function uuid() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -321,6 +359,7 @@
     list: list,
     get: get,
     remove: remove,
+    pendingBookings: pendingBookings,
     flush: flush,
     queueCount: queueCount,
     uuid: uuid
