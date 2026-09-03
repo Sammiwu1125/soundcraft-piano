@@ -67,6 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var address = g('street') + (g('unit') ? ', ' + g('unit') : '') +
       (g('city') ? ', ' + g('city') : '') + ', BC';
 
+    // 三個時段不見得涵蓋所有人的作息，所以另外開一格讓客戶自己寫。
+    // 自己寫的優先 —— 他特地打了字，那才是他真正方便的時間。
+    // 兩邊都填的情況下，勾選的時段照樣寫進信裡，資訊不會掉。
+    var preferredTime = g('preferredOwn') || g('preferred');
+
     var rows = [
       ['Name', g('name')],
       ['Phone', g('phone')],
@@ -78,7 +83,8 @@ document.addEventListener('DOMContentLoaded', function () {
       ['Make / model', g('brand')],
       ['Last tuned', g('lastTuned')],
       ['Preferred date', formatDate(g('preferredDate'))],
-      ['Preferred time', g('preferred')]
+      ['Preferred time', preferredTime],
+      ['Also ticked', g('preferredOwn') && g('preferred') ? g('preferred') : '']
     ].filter(function (r) { return r[1]; });
 
     var subject = 'Service request — ' + (g('service') || 'Piano service') +
@@ -98,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (g('name')) params.set('n', g('name'));
     if (g('service')) params.set('s', g('service'));
     if (g('preferredDate')) params.set('d', g('preferredDate'));
-    if (g('preferred')) params.set('t', g('preferred'));
+    if (preferredTime) params.set('t', preferredTime);
     var confirmUrl = location.origin +
       location.pathname.replace(/[^/]*$/, '') + 'confirm.html?' + params.toString();
 
@@ -130,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
         piano_type: g('pianoType'),
         last_tuned: g('lastTuned'),
         preferred_date: g('preferredDate'),
-        preferred_time: g('preferred'),
+        preferred_time: preferredTime,
         notes: g('notes')
       });
     }

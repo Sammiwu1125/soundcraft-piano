@@ -87,8 +87,10 @@
   }
   function showChanged() {
     if (!changedBox) return;
+    var own = document.getElementById('cf-time-own');
     var differs = (dateRaw && dateEl && dateEl.value && dateEl.value !== dateRaw) ||
-                  (slot && currentSlot() && currentSlot() !== slot);
+                  (slot && currentSlot() && currentSlot() !== slot) ||
+                  !!(own && own.value.trim() && own.value.trim() !== slot);
     changedBox.style.display = differs ? 'flex' : 'none';
   }
 
@@ -118,6 +120,22 @@
     input.addEventListener('change', showChanged);
   });
 
+  // 三個時段裡的第一個帶著 required，用來強制至少選一個。
+  // 但客戶如果自己寫了時間，就不該再被擋住 —— 兩者擇一即可。
+  var ownEl = document.getElementById('cf-time-own');
+  if (ownEl) {
+    ownEl.addEventListener('input', function () {
+      var typed = ownEl.value.trim() !== '';
+      Array.prototype.forEach.call(form.querySelectorAll('.slot input'), function (input) {
+        if (input.hasAttribute('required') || input.dataset.wasRequired) {
+          input.dataset.wasRequired = '1';
+          input.required = !typed;
+        }
+      });
+      showChanged();
+    });
+  }
+
   view.style.display = 'block';
 
   function sendingLabel() {
@@ -135,7 +153,8 @@
       if (dateEl) { dateEl.focus(); dateEl.scrollIntoView({ block: 'center' }); }
       return;
     }
-    showDateError(false);
+    // 三個時段不見得夠用，客戶自己寫的優先
+    var newTime = g('preferredOwn') || g('preferred');
 
     var payload = new FormData();
     payload.append('_subject', 'Time changed — ' + ref + ' — ' + name);
@@ -143,7 +162,8 @@
     payload.append('Name', name);
     if (service) payload.append('Service', service);
     payload.append('New date', formatDate(g('preferredDate')));
-    payload.append('New time', g('preferred'));
+    payload.append('New time', newTime);
+    if (g('preferredOwn') && g('preferred')) payload.append('Also ticked', g('preferred'));
     payload.append('Was', [formatDate(dateRaw), slot].filter(Boolean).join(', '));
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
 
@@ -156,7 +176,7 @@
         name: name,
         service: service,
         preferred_date: g('preferredDate'),
-        preferred_time: g('preferred')
+        preferred_time: newTime
       });
     }
 

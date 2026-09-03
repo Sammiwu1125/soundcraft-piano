@@ -241,6 +241,7 @@
 
   // 表單提示文字（placeholder 不是文字節點，要另外處理）
   var ZH_PLACEHOLDER = {
+    'Or type a time that suits you better, e.g. after 5pm, or Saturday morning': '或直接寫下你方便的時間，例如「五點以後」、「週六早上」',
     'Usually on the fallboard, e.g. Yamaha U1': '通常印在琴鍵上方的蓋板上，例如 Yamaha U1',
     'First and last name': '你的姓名',
     'Sticking keys, buzzing notes, recent moves, stairs at the entrance.':
