@@ -339,6 +339,18 @@
     }, function () { return []; });
   }
 
+  // 記下確認信是什麼時候寄的。存在資料庫而不是本機，換一台裝置才看得到 ——
+  // 不然「有沒有寄過」這件事又會變成各裝置各自為政。
+  // 同一個 ref 可能有好幾列（詢問、確認地址、改期），全部一起更新。
+  function markBookingConfirmed(ref) {
+    if (!isConfigured() || !session || !navigator.onLine) return Promise.resolve(false);
+    return authed('/rest/v1/bookings?ref=eq.' + encodeURIComponent(ref), {
+      method: 'PATCH',
+      headers: { 'Prefer': 'return=minimal' },
+      body: { confirmed_at: new Date().toISOString() }
+    }).then(function () { return true; });
+  }
+
   // ── 封鎖時段 ────────────────────────────────────────────────
   // 這張表是公開可讀的（預約表單要靠它把已排滿的時段變成不可選），
   // 所以裡面只能有日期與時段，絕對不要加客戶姓名之類的欄位。
@@ -388,6 +400,7 @@
     get: get,
     remove: remove,
     pendingBookings: pendingBookings,
+    markBookingConfirmed: markBookingConfirmed,
     listBlocked: listBlocked,
     addBlocked: addBlocked,
     removeBlocked: removeBlocked,

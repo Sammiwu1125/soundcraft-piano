@@ -170,7 +170,6 @@ select {
 }
 .tk-sig.signed .tk-sig-ph { display: none; }
 
-/* ── 工單清單 ── */
 /* ── 封鎖時段 ── */
 .tk-block-add { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .tk-block-add input[type=date] { flex: 0 1 170px; }
@@ -184,6 +183,7 @@ select {
   .tk-block-add input[type=date], .tk-block-add select, .tk-block-add .tk-btn { flex: 1 1 100%; }
 }
 
+/* ── 工單清單 ── */
 .tk-search { display: flex; gap: 10px; margin-top: 20px; }
 .tk-search input { flex: 1; }
 
@@ -208,6 +208,7 @@ select {
   display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 999px;
   background: #FFF3E8; color: #9A4A05; font-family: var(--mono); font-size: 10px; letter-spacing: .06em;
 }
+.tk-item-flag--ok { background: #EFF7F1; color: #14603B; }
 .tk-empty { padding: 44px 20px; text-align: center; color: var(--muted); font-size: 14px; }
 
 /* 預約清單是嵌在卡片裡的，不需要卡片自己那圈邊框與左右內距 */

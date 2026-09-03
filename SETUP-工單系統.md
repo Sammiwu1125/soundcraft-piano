@@ -234,6 +234,20 @@ create policy "staff delete" on public.blocked_slots for delete to authenticated
 
 ---
 
+## 步驟八：記錄確認信寄過沒有
+
+不做這步的話，寄過確認信的預約在清單上看起來跟沒寄過的一模一樣，很容易重寄。
+
+```sql
+alter table public.bookings add column if not exists confirmed_at timestamptz;
+```
+
+做完之後，按過「Send confirmation」的預約會在名字旁邊出現綠色的「CONFIRMED · 日期」標記，按鈕也會變成「Resend confirmation」。
+
+> 記錄的時機是**按下按鈕、信件草稿開啟的那一刻**，不是你真的按下寄出。所以萬一你開了草稿又放棄，標記會顯示已寄。看到不對就再按一次重寄即可 —— 這比完全看不出寄過沒有好得多。
+
+---
+
 ## 舊資料怎麼辦
 
 舊工單還鎖在各裝置的瀏覽器裡。**在每一台填過工單的裝置上**，各自打開舊的 Netlify 那頁按一次「Export All (Excel)」，把檔案存下來。

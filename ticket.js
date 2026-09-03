@@ -57,7 +57,9 @@
     bkService: '服務項目', bkPreferred: '希望時段', bkNotes: '客戶備註',
     bkAccess: '進出說明', bkEmail: '電子郵件', bkAwaitingAddress: '尚未填地址',
     // 寄給客戶的動作
-    sendConfirm: '寄確認信', sendReschedule: '寄改期連結',
+    sendConfirm: '寄確認信', resendConfirm: '重寄確認信', sendReschedule: '寄改期連結',
+    bkConfirmed: '已寄確認信',
+    markFailed: '無法記錄確認信已寄出：',
     // 封鎖時段
     blockedTitle: '不開放的時段',
     blockedHint: '客戶在預約表單上選不到這些時段。跟人談定之後把時段加進來，或整天封起來。',
@@ -340,6 +342,13 @@
         flag.textContent = T('bkAwaitingAddress', 'NO ADDRESS YET');
         name.appendChild(flag);
       }
+      // 已經寄過確認信的要標出來，否則同一筆很容易寄第二次
+      if (b.confirmed_at) {
+        var sent = document.createElement('span');
+        sent.className = 'tk-item-flag tk-item-flag--ok';
+        sent.textContent = T('bkConfirmed', 'CONFIRMED') + ' · ' + prettyDate(b.confirmed_at);
+        name.appendChild(sent);
+      }
 
       var meta = document.createElement('div');
       meta.className = 'tk-item-meta';
@@ -360,16 +369,31 @@
       // 巢狀的按鈕點下去會連帶觸發外層
       var actions = document.createElement('div');
       actions.className = 'tk-bk-actions';
-      [[T('sendConfirm', 'Send confirmation'), confirmEmail],
-       [T('sendReschedule', 'Send reschedule link'), rescheduleEmail]
-      ].forEach(function (a) {
-        var el = document.createElement('button');
-        el.type = 'button';
-        el.className = 'tk-btn tk-btn--ghost tk-btn--sm';
-        el.textContent = a[0];
-        el.addEventListener('click', function () { openMail(a[1](b)); });
-        actions.appendChild(el);
+      var confirmBtn = document.createElement('button');
+      confirmBtn.type = 'button';
+      confirmBtn.className = 'tk-btn tk-btn--ghost tk-btn--sm';
+      confirmBtn.textContent = b.confirmed_at
+        ? T('resendConfirm', 'Resend confirmation')
+        : T('sendConfirm', 'Send confirmation');
+      confirmBtn.addEventListener('click', function () {
+        openMail(confirmEmail(b));
+        // 開了草稿就記下來。她可能開了又放棄，那筆記錄會稍微樂觀 ——
+        // 但要解決的是「不小心重寄」，而按鈕仍然可以再按一次重寄，
+        // 比起讓她完全看不出寄過沒有，這樣好得多。
+        note($('bk-error'), false);
+        S.markBookingConfirmed(b.ref).then(loadBookings, function (err) {
+          note($('bk-error'), true, T('markFailed', 'Could not record that the confirmation was sent: ') +
+            (err.message || err));
+        });
       });
+      actions.appendChild(confirmBtn);
+
+      var reBtn = document.createElement('button');
+      reBtn.type = 'button';
+      reBtn.className = 'tk-btn tk-btn--ghost tk-btn--sm';
+      reBtn.textContent = T('sendReschedule', 'Send reschedule link');
+      reBtn.addEventListener('click', function () { openMail(rescheduleEmail(b)); });
+      actions.appendChild(reBtn);
 
       // 談定之後一鍵把這個時段擋掉，不必再回頭手動輸入日期
       if (b.preferred_date && b.preferred_time) {
