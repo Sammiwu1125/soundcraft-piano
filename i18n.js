@@ -221,8 +221,8 @@
     'Morning': '上午',
     'Afternoon': '下午',
     'Evening': '傍晚',
-    'We visit Monday to Saturday. Leave this blank if any time works.':
-      '我們的到府服務為週一至週六。時間都可以的話，這裡留空就好。',
+    'We visit Monday to Saturday. Pick a date, then a time slot or write your own below.':
+      '我們的到府服務為週一至週六。請先選日期，時段可以按下方按鈕或自己填寫。',
     'Sundays are not available. Please choose another day.':
       '週日不提供服務，請改選其他日期。',
     'Anything else we should know': '其他想讓我們知道的事',
