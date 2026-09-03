@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Service Tickets — Soundcraft Piano Service</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ticket.css?v=1">
+</head>
+<body class="tk">
+
+<div class="tk-top">
+  <div class="tk-top-in">
+    <a href="index.html" style="line-height: 0">
+      <img src="assets/logo-h-tight.png" alt="Soundcraft Piano Service">
+    </a>
+    <div class="tk-top-spacer"></div>
+
+    <span id="pending" class="tk-pending" title="Waiting to sync">
+      <span id="pending-n">0</span><span data-t="pendingSuffix">to sync</span>
+    </span>
+
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px">
+      <span id="lang-en" role="button" tabindex="0"
+            style="font-family: 'IBM Plex Mono', monospace; cursor: pointer">EN</span>
+      <span style="color: #C3C9D0">/</span>
+      <span id="lang-zh" role="button" tabindex="0"
+            style="font-family: 'Noto Sans TC', sans-serif; cursor: pointer">中</span>
+    </div>
+
+    <span id="who" class="tk-who"></span>
+    <button id="signout" type="button" class="tk-btn tk-btn--ghost tk-btn--sm" style="display: none"
+            data-t="signOut">Sign out</button>
+  </div>
+</div>
+
+<div class="tk-wrap">
+
+  <!-- ════ 尚未設定 ════ -->
+  <section id="view-setup" style="display: none">
+    <div class="tk-card">
+      <h2 data-t="setupTitle">Not connected yet</h2>
+      <p class="tk-hint" data-t="setupHint">Open ticket-config.js and paste in your Supabase project URL and anon key. The setup steps are in SETUP-工單系統.md.</p>
+    </div>
+  </section>
+
+  <!-- ════ 登入 ════ -->
+  <section id="view-login" style="display: none">
+    <div class="tk-card" style="max-width: 420px; margin-top: 56px">
+      <h2 data-t="loginTitle">Staff sign in</h2>
+      <p class="tk-hint" data-t="loginHint">Service tickets are private. Sign in to create or look one up.</p>
+      <form id="login-form" novalidate>
+        <div class="tk-field">
+          <label class="tk-label" for="li-email" data-t="email">Email</label>
+          <input id="li-email" type="email" autocomplete="username" required>
+        </div>
+        <div class="tk-field">
+          <label class="tk-label" for="li-pass" data-t="password">Password</label>
+          <input id="li-pass" type="password" autocomplete="current-password" required>
+        </div>
+        <button id="li-btn" type="submit" class="tk-btn" style="width: 100%" data-t="signIn">Sign in</button>
+        <div id="li-error" class="tk-note tk-note--err"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ════ 工單清單 ════ -->
+  <section id="view-list" style="display: none">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 30px">
+      <h1 style="margin: 0; font-family: Poppins, 'Noto Sans TC', sans-serif; font-size: 27px; font-weight: 600"
+          data-t="listTitle">Service tickets</h1>
+      <button id="new-btn" type="button" class="tk-btn" data-t="newTicket">New ticket</button>
+    </div>
+
+    <div class="tk-search">
+      <input id="q" type="text" data-t-ph="searchPh" placeholder="Search name, phone, ticket no, address">
+      <button id="q-btn" type="button" class="tk-btn tk-btn--ghost" data-t="search">Search</button>
+    </div>
+
+    <div id="list-offline" class="tk-note tk-note--warn" data-t="offlineList">
+      No connection — showing tickets saved on this device. Search covers cached tickets only.
+    </div>
+
+    <div id="list" class="tk-list"></div>
+    <div style="margin-top: 14px; text-align: right">
+      <button id="export-btn" type="button" class="tk-btn tk-btn--ghost tk-btn--sm" data-t="exportCsv">Export CSV</button>
+    </div>
+  </section>
+
+  <!-- ════ 工單表單 ════ -->
+  <section id="view-form" style="display: none">
+    <form id="ticket-form" novalidate>
+
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-top: 30px">
+        <h1 id="form-title" style="margin: 0; font-family: Poppins, 'Noto Sans TC', sans-serif; font-size: 27px; font-weight: 600"
+            data-t="newTicket">New ticket</h1>
+        <button id="back-btn" type="button" class="tk-btn tk-btn--ghost tk-btn--sm" data-t="backToList">← All tickets</button>
+      </div>
+
+      <!-- 客戶與鋼琴 -->
+      <div class="tk-card">
+        <h2 data-t="secClient">Client &amp; piano</h2>
+        <p class="tk-hint" data-t="secClientHint">Only the client name is required — everything else can be filled in later.</p>
+
+        <div class="tk-row">
+          <div class="tk-field">
+            <label class="tk-label" for="f-ticketNo" data-t="ticketNo">Ticket no.</label>
+            <input id="f-ticketNo" type="text" data-t-ph="ticketNoPh" placeholder="e.g. 2026-014">
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="f-serviceDate" data-t="serviceDate">Service date</label>
+            <input id="f-serviceDate" type="date">
+          </div>
+        </div>
+
+        <div class="tk-row">
+          <div class="tk-field">
+            <label class="tk-label" for="f-clientName" data-t="clientName">Client name</label>
+            <input id="f-clientName" type="text" required>
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="f-clientPhone" data-t="phone">Phone</label>
+            <input id="f-clientPhone" type="tel" inputmode="tel">
+          </div>
+        </div>
+
+        <div class="tk-field">
+          <label class="tk-label" for="f-address" data-t="address">Address</label>
+          <input id="f-address" type="text">
+        </div>
+
+        <div class="tk-row-3">
+          <div class="tk-field">
+            <label class="tk-label" for="f-brand" data-t="brand">Make / model</label>
+            <input id="f-brand" type="text" data-t-ph="brandPh" placeholder="e.g. Yamaha U1">
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="f-pianoType" data-t="pianoType">Piano type</label>
+            <select id="f-pianoType"></select>
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="f-lastTuned" data-t="lastTuned">Last tuned</label>
+            <select id="f-lastTuned"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 出勤準備 -->
+      <div class="tk-card">
+        <h2 data-t="secPrep">Before leaving</h2>
+        <p class="tk-hint" data-t="secPrepHint">Tick what is already in the van.</p>
+        <div id="prep-chips" class="tk-chips"></div>
+      </div>
+
+      <!-- 現場檢查 -->
+      <div class="tk-card">
+        <h2 data-t="secInspect">On site</h2>
+        <p class="tk-hint" data-t="secInspectHint">Tick what has been done, then note anything worth remembering about this piano.</p>
+        <div id="inspect-chips" class="tk-chips" style="margin-bottom: 20px"></div>
+        <div class="tk-field" style="margin-bottom: 0">
+          <label class="tk-label" for="f-conditionNotes" data-t="conditionNotes">Condition notes</label>
+          <textarea id="f-conditionNotes" data-t-ph="notesPh"
+                    placeholder="Pitch before tuning, sticking keys, felt wear, humidity reading…"></textarea>
+        </div>
+      </div>
+
+      <!-- 服務項目 -->
+      <div class="tk-card">
+        <h2 data-t="secItems">Work done</h2>
+        <p class="tk-hint" data-t="secItemsHint">Leave the quantity at 0 for anything not done on this visit.</p>
+        <div class="tk-items-scroll">
+          <table class="tk-items">
+            <thead>
+              <tr>
+                <th data-t="itemName">Item</th>
+                <th class="num" style="width: 80px" data-t="qty">Qty</th>
+                <th class="num" style="width: 110px" data-t="unitPrice">Unit price</th>
+                <th class="num" style="width: 100px" data-t="lineTotal">Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="items-body"></tbody>
+          </table>
+        </div>
+        <div style="margin-top: 14px">
+          <button id="add-item" type="button" class="tk-btn tk-btn--ghost tk-btn--sm" data-t="addItem">+ Add line</button>
+        </div>
+        <div class="tk-total">
+          <span class="tk-total-k" data-t="total">TOTAL</span>
+          <span class="tk-total-v" id="total">$0.00</span>
+        </div>
+      </div>
+
+      <!-- 付款與後續 -->
+      <div class="tk-card">
+        <h2 data-t="secPayment">Payment &amp; follow-up</h2>
+        <div class="tk-row-3">
+          <div class="tk-field">
+            <label class="tk-label" for="f-paymentMethod" data-t="paymentMethod">Paid by</label>
+            <select id="f-paymentMethod"></select>
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="f-warrantyDays" data-t="warranty">Warranty (days)</label>
+            <input id="f-warrantyDays" type="number" min="0" step="1" inputmode="numeric">
+          </div>
+          <div class="tk-field">
+            <label class="tk-label" for="f-nextTuning" data-t="nextTuning">Next tuning due</label>
+            <input id="f-nextTuning" type="date">
+          </div>
+        </div>
+      </div>
+
+      <!-- 簽名 -->
+      <div class="tk-card">
+        <h2 data-t="secSign">Client signature</h2>
+        <p class="tk-hint" data-t="secSignHint">Optional. Have the client sign with a finger or a stylus.</p>
+        <div class="tk-sig" id="sig-box">
+          <canvas id="sig"></canvas>
+          <div class="tk-sig-ph" data-t="signHere">SIGN HERE</div>
+        </div>
+        <div style="margin-top: 12px">
+          <button id="sig-clear" type="button" class="tk-btn tk-btn--ghost tk-btn--sm" data-t="clearSig">Clear signature</button>
+        </div>
+      </div>
+
+      <!-- 動作 -->
+      <div class="tk-card">
+        <div class="tk-actions">
+          <button id="save-btn" type="submit" class="tk-btn" data-t="saveTicket">Save ticket</button>
+          <button id="print-btn" type="button" class="tk-btn tk-btn--ghost" data-t="printReceipt">Print receipt</button>
+          <div style="flex: 1"></div>
+          <button id="delete-btn" type="button" class="tk-btn tk-btn--danger tk-btn--sm" style="display: none"
+                  data-t="deleteTicket">Delete</button>
+        </div>
+        <div id="form-error" class="tk-note tk-note--err"></div>
+        <div id="form-warn" class="tk-note tk-note--warn"></div>
+        <div id="form-ok" class="tk-note tk-note--ok"></div>
+      </div>
+
+    </form>
+  </section>
+</div>
+
+<!-- 列印用的收據，畫面上永遠看不到，只有列印時才出現 -->
+<div class="tk-receipt" id="receipt"></div>
+
+<script src="ticket-config.js?v=1"></script>
+<script src="ticket-store.js?v=1"></script>
+<script src="ticket.js?v=1"></script>
+</body>
+</html>
