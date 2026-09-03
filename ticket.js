@@ -468,17 +468,38 @@
     };
   }
 
-  // Gmail 的撰寫視窗。用 mailto: 的話會開啟系統預設信件程式，
-  // 但這台電腦不一定設定過；Sammi 用的是 Gmail，直接開網頁版最穩。
+  // 開啟寫信畫面。桌機與手機要走不同的路：
+  //
+  // 桌機：直接開 Gmail 網頁版的撰寫視窗。mailto: 在桌機會叫出系統預設的
+  //       信件程式，而那個程式不一定設定過。
+  // 手機：一律用 mailto:。手機上用 window.open 開 Gmail 網頁版不可靠 ——
+  //       會被彈窗阻擋，或被導到不吃 compose 參數的行動版介面。
+  //       mailto: 則是交給作業系統挑，手機上裝了哪個信件 App 就開哪個。
+  function isHandheld() {
+    return window.matchMedia('(pointer: coarse)').matches ||
+      /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  function mailtoUrl(mail) {
+    return 'mailto:' + encodeURIComponent(mail.to) +
+      '?subject=' + encodeURIComponent(mail.subject) +
+      '&body=' + encodeURIComponent(mail.body);
+  }
+
   function openMail(mail) {
     if (!mail.to) { alert(T('noEmail', 'This booking has no email address — please phone the customer instead.')); return; }
+
+    if (isHandheld()) { location.href = mailtoUrl(mail); return; }
+
     var u = new URLSearchParams();
     u.set('view', 'cm');
     u.set('fs', '1');
     u.set('to', mail.to);
     u.set('su', mail.subject);
     u.set('body', mail.body);
-    window.open('https://mail.google.com/mail/?' + u.toString(), '_blank', 'noopener');
+    var win = window.open('https://mail.google.com/mail/?' + u.toString(), '_blank', 'noopener');
+    // 桌機的彈窗阻擋擋下來時退回 mailto:，總比什麼都沒發生好
+    if (!win) location.href = mailtoUrl(mail);
   }
 
   // 把一筆預約轉成預先填好的工單
