@@ -412,12 +412,14 @@
       '',
       'Your visit is confirmed. Here are the details:',
       '',
-      '  Service:  ' + (b.service || ''),
-      '  Date:     ' + prettyDate(b.preferred_date),
-      '  Time:     ' + (b.preferred_time || ''),
-      '  Address:  ' + (b.address || ''),
-      (b.brand || b.piano_type) ? '  Piano:    ' + [b.brand, b.piano_type].filter(Boolean).join(', ') : null,
-      '  Ref:      ' + (b.ref || ''),
+      // 不要用連續空格排版。信件編輯器（Gmail 尤其）會把連續空格壓成一個，
+      // 對齊不但沒了，還會看起來像亂碼。一行一項最保險。
+      'Service: ' + (b.service || ''),
+      'Date: ' + prettyDate(b.preferred_date),
+      'Time: ' + (b.preferred_time || ''),
+      'Address: ' + (b.address || ''),
+      (b.brand || b.piano_type) ? 'Piano: ' + [b.brand, b.piano_type].filter(Boolean).join(', ') : null,
+      'Ref: ' + (b.ref || ''),
       '',
       cal ? 'Add it to your calendar:' : null,
       cal ? cal : null,
@@ -481,9 +483,12 @@
   }
 
   function mailtoUrl(mail) {
+    // 換行一定要送 CRLF（%0D%0A）。RFC 6068 是這樣規定的，而 Gmail 的
+    // Android App 對單獨的 %0A 會直接忽略，整封信擠成一段。
+    var body = mail.body.replace(/\r?\n/g, '\r\n');
     return 'mailto:' + encodeURIComponent(mail.to) +
       '?subject=' + encodeURIComponent(mail.subject) +
-      '&body=' + encodeURIComponent(mail.body);
+      '&body=' + encodeURIComponent(body);
   }
 
   function openMail(mail) {
