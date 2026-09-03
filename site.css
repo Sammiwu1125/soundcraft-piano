@@ -162,6 +162,24 @@ html[lang="zh-Hant"] [style*="IBM Plex Mono"] {
   display: block;
 }
 
+/* ── 必填欄位：淺色底 ──
+   欄位標籤旁的 * 太小，掃過去容易漏。改成整格上淺色底，一眼就看得出
+   哪幾格非填不可，空白的選填欄位則維持純白。
+   聚焦時轉回白色，讓「正在填的那一格」反而是最亮的。
+   版面的底色寫在 inline style 裡，所以這裡需要 !important。
+   只改 background-color，不能用 background 簡寫 —— select 的下拉箭頭
+   是 background-image，用簡寫會把箭頭一起蓋掉。 */
+.bk-layout input[required],
+.bk-layout select[required],
+.bk-layout textarea[required] {
+  background-color: #F1F5F9 !important;
+}
+.bk-layout input[required]:focus,
+.bk-layout select[required]:focus,
+.bk-layout textarea[required]:focus {
+  background-color: #FFFFFF !important;
+}
+
 /* ── 預約頁：到府時段選擇 ── */
 .slot-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 .slot { flex: 1 1 150px; margin: 0; }
