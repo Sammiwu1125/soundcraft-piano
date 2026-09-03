@@ -80,6 +80,33 @@
     if (dateError) dateError.style.display = on ? 'flex' : 'none';
     if (dateEl) dateEl.style.borderColor = on ? '#F2740B' : '#D5E1EC';
   }
+  // ── 加到 Google 日曆 ──
+  // 用 Google 日曆的預填連結，不必串 API、不必授權：點下去會開啟一個
+  // 已經填好時間與地址的新行程，按儲存才會真的建立。
+  // 時段字串必須跟 confirm.html 的 value 一字不差，改動時兩邊要一起改。
+  var SLOT_HOURS = {
+    'Morning (10:00 - 12:00)': ['100000', '120000'],
+    'Afternoon (2:00 - 4:00)': ['140000', '160000'],
+    'Evening (6:00 - 8:00)': ['180000', '200000']
+  };
+
+  function calendarLink(dateISO, slotValue, title, location, details) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateISO || '');
+    var hours = SLOT_HOURS[slotValue];
+    if (!p || !hours) return '';
+    var ymd = p[1] + p[2] + p[3];
+    var cal = new URLSearchParams();
+    cal.set('action', 'TEMPLATE');
+    cal.set('text', title);
+    cal.set('dates', ymd + 'T' + hours[0] + '/' + ymd + 'T' + hours[1]);
+    // 交給 Google 用溫哥華時區解讀，日光節約時間它自己會處理，
+    // 我們不必在這裡換算 UTC（換算才容易在換季時算錯一小時）
+    cal.set('ctz', 'America/Vancouver');
+    if (location) cal.set('location', location);
+    if (details) cal.set('details', details);
+    return 'https://calendar.google.com/calendar/render?' + cal.toString();
+  }
+
   // 目前選的時間跟原本預約的不一樣時提醒一句。改時間是允許的
   // （雙方可能已經另外談好），但不能讓客戶自己改到了卻沒發現。
   var changedBox = document.getElementById('cf-date-changed');
@@ -162,6 +189,27 @@
     payload.append('City', chosenCity);
     payload.append('Address', address);
     if (g('access')) payload.append('Access notes', g('access'));
+
+    // 一鍵把這次到府加進 Google 日曆，不必再手動打一次時間與地址
+    var calDetails = [
+      'Ref: ' + ref,
+      get('p') ? 'Phone: ' + get('p') : '',
+      get('e') ? 'Email: ' + get('e') : '',
+      [get('b'), get('pt')].filter(Boolean).join(', ') ?
+        'Piano: ' + [get('b'), get('pt')].filter(Boolean).join(', ') : '',
+      get('lt') ? 'Last tuned: ' + get('lt') : '',
+      g('access') ? 'Access: ' + g('access') : ''
+    ].filter(Boolean).join('\n');
+
+    var calUrl = calendarLink(
+      g('preferredDate'),
+      g('preferred'),
+      (service || 'Piano service') + ' — ' + name,
+      address,
+      calDetails
+    );
+    if (calUrl) payload.append('Add to Google Calendar', calUrl);
+
     if (f.get('_gotcha')) payload.append('_gotcha', f.get('_gotcha'));
 
     // 同步第二階段的結果。這一筆帶著確認後的地址與雙方談定的時間，
