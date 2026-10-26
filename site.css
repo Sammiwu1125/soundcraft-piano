@@ -205,3 +205,12 @@ html[lang="zh-Hant"] [style*="IBM Plex Mono"] {
 .slot--off .slot-name { color: #A6AFB9; text-decoration: line-through; }
 .slot--off .slot-time { color: #B8C0C9; text-decoration: line-through; }
 .slot--off:hover .slot-box { border-color: #E3E8ED; }
+
+/* 服務地區表格：城市數不是欄數的倍數時，最後一列會露出一塊底色空格。
+   只有在最後一格「獨自佔一列」時才讓它補滿整列 —— 用 nth-child 判斷，
+   欄數在不同斷點會變，所以每個斷點各寫一條。 */
+.cities > div:last-child:nth-child(4n+1) { grid-column: span 4; }
+@media (max-width: 820px) {
+  .cities > div:last-child:nth-child(4n+1) { grid-column: auto; }
+  .cities > div:last-child:nth-child(2n+1) { grid-column: span 2; }
+}
