@@ -218,6 +218,7 @@
     'More than 3 years ago': '三年以上',
     'Never, or unknown': '從未調過，或不確定',
     'Preferred date and time': '希望到府的日期與時段',
+    'YYYY / MM / DD': '年 / 月 / 日',
     'Morning': '上午',
     'Afternoon': '下午',
     'Evening': '傍晚',
