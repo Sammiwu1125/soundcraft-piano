@@ -124,6 +124,18 @@
     { key: 'Card', en: 'Card', zh: '刷卡' },
     { key: 'Unpaid', en: 'Not paid yet', zh: '尚未付款' }
   ];
+  // 收據抬頭的公司資訊。要改聯絡方式只改這裡，不必翻程式。
+  // 留空字串的欄位不會印出來，所以還沒決定的先留空即可。
+  var COMPANY = {
+    name: 'Soundcraft Piano Service',
+    address: '',                       // 街道地址，填了才會印在收據上
+    phone: '(236) 622-5636',
+    email: 'rrrick1324@gmail.com',
+    web: 'soundcraftpianoservice.ca',
+    hours: 'Monday – Saturday, 9:00 – 18:00',
+    gst: ''                            // GST／HST 號碼，有登記再填
+  };
+
   var DEFAULT_ITEMS = [
     { en: 'Basic tuning', zh: '基本調音', qty: 1 },
     { en: 'Deep voicing', zh: '深度調音修整', qty: 0 },
@@ -1042,8 +1054,25 @@
     var logo = new Image();
     logo.src = 'assets/logo-h-tight.png';
     logo.className = 'logo';
-    logo.alt = 'Soundcraft Piano Service';
-    box.appendChild(logo);
+    logo.alt = COMPANY.name;
+
+    // 抬頭：左邊 logo，右邊公司聯絡方式。收據要能單獨存在 ——
+    // 客戶日後拿著這張紙找我們，上面就得有電話與地址。
+    var head = el('div', null,
+      'display: flex; justify-content: space-between; align-items: flex-start; gap: 24px');
+    var headLeft = el('div');
+    headLeft.appendChild(logo);
+    var headRight = el('div', null,
+      'text-align: right; font-size: 11.5px; line-height: 1.65; color: #444');
+    headRight.appendChild(el('div', COMPANY.name, 'font-weight: 600; color: #111'));
+    [COMPANY.address, COMPANY.phone, COMPANY.email, COMPANY.web,
+     COMPANY.gst ? 'GST/HST: ' + COMPANY.gst : ''
+    ].filter(Boolean).forEach(function (line) {
+      headRight.appendChild(el('div', line));
+    });
+    head.appendChild(headLeft);
+    head.appendChild(headRight);
+    box.appendChild(head);
 
     box.appendChild(el('h1', T('receiptTitle', 'Service receipt')));
     box.appendChild(el('div', [t.ticketNo, prettyDate(t.serviceDate)].filter(Boolean).join('  ·  '),
@@ -1114,6 +1143,11 @@
       'margin-top: 14px; color: #666'));
     box.appendChild(el('div', T('receiptThanks', 'Thank you for choosing Soundcraft Piano Service.'),
       'margin-top: 22px; text-align: center; color: #666'));
+    // 收尾再放一次聯絡方式。客戶讀到最後要追問時，眼睛就在這裡，
+    // 不必再翻回抬頭。
+    box.appendChild(el('div',
+      [COMPANY.phone, COMPANY.email, COMPANY.hours].filter(Boolean).join('  ·  '),
+      'margin-top: 6px; text-align: center; color: #888; font-size: 11.5px'));
 
     // logo 還沒載完就列印會印出破圖，等它一下
     if (logo.complete) window.print();
