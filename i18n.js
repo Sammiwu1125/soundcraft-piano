@@ -116,9 +116,11 @@
     'Delta': '三角洲',
     'Langley': '蘭里',
     'White Rock': '白石',
+    'Maple Ridge': '楓樹嶺',
+    'Pitt Meadows': '匹特草原',
     'Abbotsford': '阿波斯福',
-    'Vancouver · Burnaby · Richmond · Surrey · Coquitlam · Port Coquitlam · New Westminster · North Vancouver · West Vancouver · Delta · Langley · White Rock · Abbotsford':
-      '溫哥華 · 本拿比 · 列治文 · 素里 · 高貴林 · 高貴林港 · 新西敏 · 北溫哥華 · 西溫哥華 · 三角洲 · 蘭里 · 白石 · 阿波斯福',
+    'Vancouver · Burnaby · Richmond · Surrey · Coquitlam · Port Coquitlam · New Westminster · North Vancouver · West Vancouver · Delta · Langley · White Rock · Maple Ridge · Pitt Meadows · Abbotsford':
+      '溫哥華 · 本拿比 · 列治文 · 素里 · 高貴林 · 高貴林港 · 新西敏 · 北溫哥華 · 西溫哥華 · 三角洲 · 蘭里 · 白石 · 楓樹嶺 · 匹特草原 · 阿波斯福',
 
     // ── 頁尾 ──
     'Piano tuning, repair, sales, and rental across Greater Vancouver.':
