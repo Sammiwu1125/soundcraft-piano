@@ -49,6 +49,10 @@
     confirmLeave: '這張工單還沒儲存，確定要離開嗎？',
     unsynced: '待同步', loading: '載入中…', signingIn: '登入中…', saving: '儲存中…',
     receiptTitle: '服務收據', receiptThanks: '感謝您選擇 Soundcraft Piano Service。',
+    // 請款單
+    printInvoice: '列印請款單', invoiceTitle: '請款單', invoiceNo: '請款單號',
+    issueDate: '開立日期', dueLabel: '付款期限', billTo: '收費對象',
+    amountDue: '應付金額', payTo: '請以 e-Transfer 付款至', paidMark: '已付款',
     servicedBy: '技師', signature: '簽名',
     // 預約帶入
     bookingsTitle: '來自預約表單',
@@ -133,7 +137,8 @@
     email: 'rrrick1324@gmail.com',
     web: 'soundcraftpianoservice.ca',
     hours: 'Monday – Saturday, 9:00 – 18:00',
-    gst: ''                            // GST／HST 號碼，有登記再填
+    gst: '',                           // GST／HST 號碼，有登記再填
+    invoiceTerms: 'Due on receipt'     // 請款單的付款期限，例如改成 'Net 14'
   };
 
   var DEFAULT_ITEMS = [
@@ -1039,7 +1044,12 @@
   // ══════════════════════════════════════════════════════════
   // 列印收據
   // ══════════════════════════════════════════════════════════
-  $('print-btn').addEventListener('click', function () {
+  // 收據與請款單共用同一份版面。差別只有三處：
+  //   收據   = 已完成的憑證，金額是「總計」，附客戶簽名
+  //   請款單 = 請對方付款，要有單號、開立日期、付款期限與付款方式，不附簽名
+  //            （簽名是客戶確認工作完成，放在請款單上沒有意義）
+  function buildDoc(mode) {
+    var invoice = mode === 'invoice';
     var t = collect();
     var box = $('receipt');
     box.innerHTML = '';
@@ -1074,9 +1084,27 @@
     head.appendChild(headRight);
     box.appendChild(head);
 
-    box.appendChild(el('h1', T('receiptTitle', 'Service receipt')));
-    box.appendChild(el('div', [t.ticketNo, prettyDate(t.serviceDate)].filter(Boolean).join('  ·  '),
-      'color: #666; margin-bottom: 14px'));
+    box.appendChild(el('h1', invoice ? T('invoiceTitle', 'Invoice') : T('receiptTitle', 'Service receipt')));
+
+    if (invoice) {
+      // 請款單要能單獨成立：單號、開立日期、付款期限缺一不可
+      [[T('invoiceNo', 'Invoice no.'), t.ticketNo],
+       [T('issueDate', 'Date'), prettyDate(todayISO())],
+       [T('serviceDate', 'Service date'), prettyDate(t.serviceDate)],
+       [T('dueLabel', 'Due'), COMPANY.invoiceTerms]].forEach(function (r) {
+        if (!r[1]) return;
+        var line = el('div', null, 'display: flex; gap: 12px; padding: 1px 0; color: #666');
+        line.appendChild(el('span', r[0], 'width: 130px'));
+        line.appendChild(el('span', r[1], 'color: #111'));
+        box.appendChild(line);
+      });
+      box.appendChild(el('div', null, 'height: 14px'));
+      box.appendChild(el('div', T('billTo', 'Bill to'),
+        'margin-bottom: 4px; color: #666; font-weight: 600'));
+    } else {
+      box.appendChild(el('div', [t.ticketNo, prettyDate(t.serviceDate)].filter(Boolean).join('  ·  '),
+        'color: #666; margin-bottom: 14px'));
+    }
 
     [[T('clientName', 'Client name'), t.clientName],
      [T('phone', 'Phone'), t.clientPhone],
@@ -1112,8 +1140,10 @@
       var a = el('td', money(i.qty * i.price)); a.className = 'num'; tr.appendChild(a);
       table.appendChild(tr);
     });
+    // 已經收到錢的話，請款單上就不該再寫「應付金額」
+    var paid = !!t.paymentMethod && t.paymentMethod !== 'Unpaid';
     var totalRow = document.createElement('tr');
-    var spacer = el('td', T('total', 'TOTAL'));
+    var spacer = el('td', (invoice && !paid) ? T('amountDue', 'AMOUNT DUE') : T('total', 'TOTAL'));
     spacer.colSpan = 3;
     spacer.style.cssText = 'text-align: right; font-weight: 600';
     totalRow.appendChild(spacer);
@@ -1124,13 +1154,22 @@
     table.appendChild(totalRow);
     box.appendChild(table);
 
+    if (invoice && paid) {
+      box.appendChild(el('div', T('paidMark', 'PAID') + ' · ' + t.paymentMethod,
+        'margin-top: 12px; font-weight: 600; color: #14603B'));
+    } else if (invoice && COMPANY.email) {
+      box.appendChild(el('div', T('payTo', 'Pay by e-Transfer to') + ' ' + COMPANY.email,
+        'margin-top: 12px; font-weight: 600'));
+    }
+
     var tail = [];
-    if (t.paymentMethod) tail.push(T('paymentMethod', 'Paid by') + ': ' + t.paymentMethod);
+    if (!invoice && t.paymentMethod) tail.push(T('paymentMethod', 'Paid by') + ': ' + t.paymentMethod);
     if (t.warrantyDays) tail.push(T('warranty', 'Warranty (days)') + ': ' + t.warrantyDays);
     if (t.nextTuning) tail.push(T('nextTuning', 'Next tuning due') + ': ' + prettyDate(t.nextTuning));
     if (tail.length) box.appendChild(el('div', tail.join('   ·   '), 'margin-top: 12px'));
 
-    if (t.signature) {
+    // 簽名只放在收據上。客戶簽的是「工作已完成」，請款單上放它沒有意義
+    if (!invoice && t.signature) {
       box.appendChild(el('div', T('signature', 'Signature'), 'margin-top: 18px; color: #666'));
       var sig = new Image();
       sig.src = t.signature;
@@ -1149,10 +1188,18 @@
       [COMPANY.phone, COMPANY.email, COMPANY.hours].filter(Boolean).join('  ·  '),
       'margin-top: 6px; text-align: center; color: #888; font-size: 11.5px'));
 
+    return logo;
+  }
+
+  function printDoc(mode) {
+    var logo = buildDoc(mode);
     // logo 還沒載完就列印會印出破圖，等它一下
     if (logo.complete) window.print();
     else { logo.onload = logo.onerror = function () { window.print(); }; }
-  });
+  }
+
+  $('print-btn').addEventListener('click', function () { printDoc('receipt'); });
+  $('invoice-btn').addEventListener('click', function () { printDoc('invoice'); });
 
   // ══════════════════════════════════════════════════════════
   // 路由
