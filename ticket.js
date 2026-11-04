@@ -51,7 +51,7 @@
     receiptTitle: '服務收據', receiptThanks: '感謝您選擇 Soundcraft Piano Service。',
     // 請款單
     printInvoice: '列印請款單', invoiceTitle: '請款單', invoiceNo: '請款單號',
-    issueDate: '開立日期', dueLabel: '付款期限', billTo: '收費對象',
+    issueDate: '開立日期', billTo: '收費對象',
     amountDue: '應付金額', payTo: '請以 e-Transfer 付款至', paidMark: '已付款',
     servicedBy: '技師', signature: '簽名',
     // 預約帶入
@@ -137,8 +137,7 @@
     email: 'rrrick1324@gmail.com',
     web: 'soundcraftpianoservice.ca',
     hours: 'Monday – Saturday, 9:00 – 18:00',
-    gst: '',                           // GST／HST 號碼，有登記再填
-    invoiceTerms: 'Due on receipt'     // 請款單的付款期限，例如改成 'Net 14'
+    gst: ''                            // GST／HST 號碼，有登記再填
   };
 
   var DEFAULT_ITEMS = [
@@ -1090,8 +1089,7 @@
       // 請款單要能單獨成立：單號、開立日期、付款期限缺一不可
       [[T('invoiceNo', 'Invoice no.'), t.ticketNo],
        [T('issueDate', 'Date'), prettyDate(todayISO())],
-       [T('serviceDate', 'Service date'), prettyDate(t.serviceDate)],
-       [T('dueLabel', 'Due'), COMPANY.invoiceTerms]].forEach(function (r) {
+       [T('serviceDate', 'Service date'), prettyDate(t.serviceDate)]].forEach(function (r) {
         if (!r[1]) return;
         var line = el('div', null, 'display: flex; gap: 12px; padding: 1px 0; color: #666');
         line.appendChild(el('span', r[0], 'width: 130px'));
@@ -1162,11 +1160,12 @@
         'margin-top: 12px; font-weight: 600'));
     }
 
-    var tail = [];
-    if (!invoice && t.paymentMethod) tail.push(T('paymentMethod', 'Paid by') + ': ' + t.paymentMethod);
-    if (t.warrantyDays) tail.push(T('warranty', 'Warranty (days)') + ': ' + t.warrantyDays);
-    if (t.nextTuning) tail.push(T('nextTuning', 'Next tuning due') + ': ' + prettyDate(t.nextTuning));
-    if (tail.length) box.appendChild(el('div', tail.join('   ·   '), 'margin-top: 12px'));
+    // 保固天數與下次調音日期不印在客戶拿到的文件上。兩個欄位仍然留在工單裡
+    // 並存進資料庫，只是當作內部紀錄。
+    if (!invoice && t.paymentMethod) {
+      box.appendChild(el('div', T('paymentMethod', 'Paid by') + ': ' + t.paymentMethod,
+        'margin-top: 12px'));
+    }
 
     // 簽名只放在收據上。客戶簽的是「工作已完成」，請款單上放它沒有意義
     if (!invoice && t.signature) {
