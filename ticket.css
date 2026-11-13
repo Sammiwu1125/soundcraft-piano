@@ -224,7 +224,9 @@ select {
 @media print {
   body.tk { background: #FFFFFF; }
   .tk-top, .tk-wrap { display: none !important; }
-  .tk-receipt { display: block !important; padding: 0; font-size: 13px; }
+  /* 內距自己給。@page 的邊界設成 0 之後紙張沒有留白，
+     內容會直接貼到邊緣，所以留白改由這裡負責。 */
+  .tk-receipt { display: block !important; padding: 14mm; font-size: 13px; }
   .tk-receipt h1 { font-size: 20px; margin: 0 0 4px; }
   .tk-receipt img.logo { height: 54px; }
   /* 抬頭（logo + 公司聯絡方式）不能被分頁切成兩半 */
@@ -232,7 +234,11 @@ select {
   .tk-receipt table { width: 100%; border-collapse: collapse; margin-top: 10px; }
   .tk-receipt th, .tk-receipt td { padding: 6px 0; border-bottom: 1px solid #DDD; text-align: left; }
   .tk-receipt th.num, .tk-receipt td.num { text-align: right; }
-  @page { margin: 16mm; }
+  /* 邊界 0 是為了甩掉瀏覽器自己加的頁首頁尾（左上的日期時間、右上的標題、
+     底部的網址與頁碼）。那些不是頁面內容，CSS 沒辦法單獨關掉它們 ——
+     但紙張沒有留白時，瀏覽器就沒有地方可以畫。
+     留白改由 .tk-receipt 的 padding 負責。 */
+  @page { margin: 0; }
 }
 
 /* ── 手機：欄位改單欄，按鈕撐滿 ── */
